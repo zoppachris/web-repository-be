@@ -29,6 +29,6 @@ public class UserDetails extends BaseModel {
 
   @OneToOne(optional = false)
   @JoinColumn(unique = true, nullable = false, updatable = false)
-  private User user;
+  private UserPrincipal user;
 
 }

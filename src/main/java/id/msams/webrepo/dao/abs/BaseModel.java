@@ -19,7 +19,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import id.msams.webrepo.dao.sec.User;
+import id.msams.webrepo.dao.sec.UserPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,13 +35,13 @@ public abstract class BaseModel implements Serializable {
 
   @Id
   @Column
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(optional = true, cascade = CascadeType.ALL)
   @JoinColumn(nullable = true, updatable = false)
   @CreatedBy
-  private User createdBy;
+  private UserPrincipal createdBy;
   @Column(nullable = false, updatable = false)
   @CreatedDate
   private LocalDateTime createdOn;
@@ -49,7 +49,7 @@ public abstract class BaseModel implements Serializable {
   @ManyToOne(optional = true, cascade = CascadeType.ALL)
   @JoinColumn(nullable = true, updatable = true)
   @LastModifiedBy
-  private User modifiedBy;
+  private UserPrincipal modifiedBy;
   @Column(nullable = true, updatable = true)
   @LastModifiedDate
   private LocalDateTime modifiedOn;

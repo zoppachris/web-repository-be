@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -23,16 +25,17 @@ import lombok.experimental.SuperBuilder;
 @Table
 public class Role extends BaseModel implements org.springframework.security.core.GrantedAuthority {
 
+  @Enumerated(EnumType.STRING)
   @Column(unique = true, nullable = false)
-  private String name;
+  private RoleType name;
 
   @EqualsAndHashCode.Exclude
   @ManyToMany(mappedBy = "roles")
-  private Set<User> users;
+  private Set<UserPrincipal> users;
 
   @Override
   public String getAuthority() {
-    return this.name;
+    return this.name.authorityName();
   }
 
 }

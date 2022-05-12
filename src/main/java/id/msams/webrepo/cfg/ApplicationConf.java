@@ -17,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import id.msams.webrepo.cfg.prp.SecurityProp;
 import id.msams.webrepo.dao.sec.Role;
 import id.msams.webrepo.dao.sec.RoleRepo;
-import id.msams.webrepo.dao.sec.User;
+import id.msams.webrepo.dao.sec.RoleType;
+import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dao.sec.UserDetails;
 import id.msams.webrepo.dao.sec.UserDetailsRepo;
 import id.msams.webrepo.dao.sec.UserRepo;
@@ -36,12 +37,11 @@ public class ApplicationConf {
 
   private static final String SUPER_ADMIN_USERNAME = "superadmin";
   private static final String SUPER_ADMIN_NAME = "Super Admin";
-  private static final String SUPER_ADMIN_ROLE_NAME = "SUPER_ADMIN";
 
   public Role initSystemRole(RoleRepo roleRepo) {
-    Optional<Role> superAdmin = roleRepo.findOneByName(SUPER_ADMIN_ROLE_NAME);
+    Optional<Role> superAdmin = roleRepo.findOneByName(RoleType.SUPER_ADMIN);
     if (!superAdmin.isPresent()) {
-      return roleRepo.save(Role.builder().name(SUPER_ADMIN_ROLE_NAME).build());
+      return roleRepo.save(Role.builder().name(RoleType.SUPER_ADMIN).build());
     } else {
       return superAdmin.get();
     }
@@ -50,7 +50,7 @@ public class ApplicationConf {
   public void initSystemUser(PasswordEncoder passwordEncoder, UserRepo userRepo,
       UserDetailsRepo userDetailsRepo, Role superAdminRole) {
     if (!userRepo.findOneByUsername(SUPER_ADMIN_USERNAME).isPresent()) {
-      User superAdmin = User.builder()
+      UserPrincipal superAdmin = UserPrincipal.builder()
           .username(SUPER_ADMIN_USERNAME)
           .password(passwordEncoder.encode("superadmin"))
           .active(true)

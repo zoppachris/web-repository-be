@@ -31,7 +31,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
-public class User extends BaseModel implements org.springframework.security.core.userdetails.UserDetails {
+public class UserPrincipal extends BaseModel implements org.springframework.security.core.userdetails.UserDetails {
 
   @Column(unique = true, nullable = false)
   private String username;
@@ -42,7 +42,7 @@ public class User extends BaseModel implements org.springframework.security.core
   private Boolean active;
 
   @ManyToMany
-  @JoinTable
+  @JoinTable(name = "user_roles")
   private Set<Role> roles;
 
   @OneToOne(mappedBy = "user", optional = false, cascade = CascadeType.ALL)

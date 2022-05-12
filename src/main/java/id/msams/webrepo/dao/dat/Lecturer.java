@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 import id.msams.webrepo.dao.abs.BaseModel;
 import id.msams.webrepo.dao.dat.ref.Faculty;
-import id.msams.webrepo.dao.sec.User;
+import id.msams.webrepo.dao.sec.UserPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,6 +32,6 @@ public class Lecturer extends BaseModel {
 
   @OneToOne(optional = false)
   @JoinColumn(unique = true, nullable = false, updatable = false)
-  private User user;
+  private UserPrincipal user;
 
 }
