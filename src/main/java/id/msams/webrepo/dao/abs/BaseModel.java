@@ -39,7 +39,7 @@ public abstract class BaseModel implements Serializable {
   private Long id;
 
   @ManyToOne(optional = true, cascade = CascadeType.ALL)
-  @JoinColumn(nullable = true, updatable = false)
+  @JoinColumn(name = "created_by", nullable = true, updatable = false)
   @CreatedBy
   private UserPrincipal createdBy;
   @Column(nullable = false, updatable = false)
@@ -47,7 +47,7 @@ public abstract class BaseModel implements Serializable {
   private LocalDateTime createdOn;
 
   @ManyToOne(optional = true, cascade = CascadeType.ALL)
-  @JoinColumn(nullable = true, updatable = true)
+  @JoinColumn(name = "modified_by", nullable = true, updatable = true)
   @LastModifiedBy
   private UserPrincipal modifiedBy;
   @Column(nullable = true, updatable = true)

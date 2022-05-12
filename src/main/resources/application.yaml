@@ -21,30 +21,32 @@ spring:
 #-----------------------------------
 spring:
   jpa:
-    hibernate:
-      # PLEASE COMMENT OUT
-      # OR CHANGE TO VALIDATE
-      # ON PRODUCTION ENVIRONMENT
-      ddl-auto: create-drop
     open-in-view: false
+  h2:
+    console:
+      enabled: false
 
---- # PostgreSQL
-spring:
-  ## Datasource
-  datasource:
-    url: jdbc:postgresql://localhost:5432/webrepo
-    username: 's53kr_lm8a6r'
-    password: '$p@s5w0rD_s53k12x'
-
-# --- # H2 In-Memory
+# --- # PostgreSQL
 # spring:
+#   jpa:
+#     hibernate:
+#       ddl-auto: validate
 #   ## Datasource
 #   datasource:
-#     url: jdbc:h2:mem:testdb
-#     driver-class-name: org.h2.Driver
-#   ## Configuration
-#   jpa:
-#     database-platform: org.hibernate.dialect.H2Dialect
+#     url: jdbc:postgresql://localhost:5432/webrepo
+#     username: 's53kr_lm8a6r'
+#     password: '$p@s5w0rD_s53k12x'
+
+--- # H2 In-Memory
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  ## Datasource
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: 's53kr_lm8a6r'
+    password: '$p@s5w0rD_s53k12x'
 
 #-----------------------------------
 --- # Security
@@ -56,7 +58,7 @@ application:
     strength: 16
     # DEFAULT LOGIN CREDENTIALS
     # WITH ROLE OF SYSTEM ADMIN
-    default-login-enabled: false
+    default-login-enabled: true
     default-login: sysadm
     default-password: sysadm
 

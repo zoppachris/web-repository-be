@@ -22,12 +22,14 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
   private final PasswordEncoder passwordEncoder;
   private final AppUserDetailsSrvc appUserDetailsSrvc;
 
+  private static final String SYSTEM_ADMIN_ROLE_NAME = "SYSTEM_ADMIN";
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // @formatter:off
     http
       .authorizeRequests()
-        .anyRequest().authenticated()
+        .anyRequest().hasRole(SYSTEM_ADMIN_ROLE_NAME)
         .and()
       .csrf()
         .disable()
@@ -49,7 +51,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
           .passwordEncoder(passwordEncoder)
           .withUser(securityProp.getDefaultLogin())
             .password(passwordEncoder.encode(securityProp.getDefaultPassword()))
-            .roles("SYSTEM_ADMIN")
+            .roles(SYSTEM_ADMIN_ROLE_NAME)
       ;
     }
     auth
