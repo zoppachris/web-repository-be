@@ -1,0 +1,58 @@
+#-----------------------------------
+--- # Application
+#-----------------------------------
+spring:
+  application:
+    name: thesis-webrepo
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+--- ## File upload limit
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500KB
+      max-request-size: 500KB
+
+#-----------------------------------
+--- # Database
+#-----------------------------------
+spring:
+  ## Datasource
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  ## Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      # PLEASE COMMENT OUT
+      # OR CHANGE TO VALIDATE
+      # ON PRODUCTION ENVIRONMENT
+      ddl-auto: update
+    open-in-view: false
+
+#-----------------------------------
+--- # Security
+#-----------------------------------
+application:
+  security:
+    # DEFINE ROUNDS OF VALIDATION
+    # TO STRENGTHEN PASSWORD PROCESSING
+    strength: 16
+    # DEFAULT LOGIN CREDENTIALS
+    # WITH ROLE OF SYSTEM ADMIN
+    default-login-enabled: false
+    default-login: sysadm
+    default-password: sysadm
+
+#-----------------------------------
+--- # Storage Service (MinIO)
+#-----------------------------------
+application:
+  minio:
+    url: cnurl
+    username: uname
+    password: paswd
