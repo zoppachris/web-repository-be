@@ -24,9 +24,9 @@ import id.msams.webrepo.dao.sec.UserDetailsRepo;
 import id.msams.webrepo.dao.sec.UserRepo;
 import id.msams.webrepo.srv.AppUserDetailsSrvc;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j2
+@Slf4j
 @Configuration
 @EnableScheduling
 @EnableJpaAuditing
