@@ -5,7 +5,7 @@ spring:
   application:
     name: thesis-webrepo
 server:
-  port: ${PORT:9090}
+  port: ${PORT}
   servlet:
     context-path: /api
 --- ## File upload limit
@@ -22,9 +22,6 @@ spring:
 spring:
   jpa:
     open-in-view: false
-  # h2:
-  #   console:
-  #     enabled: false
 
 --- # PostgreSQL
 spring:
@@ -33,20 +30,7 @@ spring:
       ddl-auto: create-drop
   ## Datasource
   datasource:
-    url: jdbc:postgresql://ec2-34-236-94-53.compute-1.amazonaws.com:5432/d8rl4gr6gp1bc9
-    username: 'sufyrhyjwjaxne'
-    password: '513532d46c4919cdb6ade1685055b5dcd8c17f74010e8c71c35f0253855bd331'
-
-# --- # H2 In-Memory
-# spring:
-#   jpa:
-#     hibernate:
-#       ddl-auto: create-drop
-#   ## Datasource
-#   datasource:
-#     url: jdbc:h2:mem:testdb
-#     username: 's53kr_lm8a6r'
-#     password: '$p@s5w0rD_s53k12x'
+    url: jdbc:${DATABASE_URL}
 
 #-----------------------------------
 --- # Security

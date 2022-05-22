@@ -90,6 +90,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>thesis-webrepo</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.asciidoctor</groupId>
