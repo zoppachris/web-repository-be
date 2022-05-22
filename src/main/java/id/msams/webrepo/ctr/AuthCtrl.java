@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +26,7 @@ import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dto.sec.LoginReq;
 import id.msams.webrepo.dto.sec.LoginRes;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -41,7 +38,6 @@ public class AuthCtrl {
   private final KeyPair keys;
 
   private final JwtEncoder jwtEncoder;
-  private final JwtDecoder jwtDecoder;
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginReq body) {
@@ -62,9 +58,6 @@ public class AuthCtrl {
             .subject(user.getUsername())
             .claim("scp", user.getRoles().stream().map(Role::getAuthority).collect(Collectors.toSet()))
             .build()));
-
-    Jwt decJwt = jwtDecoder.decode(jwt.getTokenValue());
-    log.info(decJwt.getSubject());
 
     return ResponseEntity.ok(LoginRes.builder()
         .type("Bearer")
