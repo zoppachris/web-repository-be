@@ -16,41 +16,37 @@ spring:
       max-file-size: 500KB
       max-request-size: 500KB
 
-logging:
-  level:
-    org.springframework.security.oauth2: trace
-
 #-----------------------------------
 --- # Database
 #-----------------------------------
 spring:
   jpa:
     open-in-view: false
-  h2:
-    console:
-      enabled: false
+  # h2:
+  #   console:
+  #     enabled: false
 
-# --- # PostgreSQL
-# spring:
-#   jpa:
-#     hibernate:
-#       ddl-auto: validate
-#   ## Datasource
-#   datasource:
-#     url: jdbc:postgresql://localhost:5432/webrepo
-#     username: 's53kr_lm8a6r'
-#     password: '$p@s5w0rD_s53k12x'
-
---- # H2 In-Memory
+--- # PostgreSQL
 spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
   ## Datasource
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: 's53kr_lm8a6r'
-    password: '$p@s5w0rD_s53k12x'
+    url: jdbc:postgresql://ec2-34-236-94-53.compute-1.amazonaws.com:5432/d8rl4gr6gp1bc9
+    username: 'sufyrhyjwjaxne'
+    password: '513532d46c4919cdb6ade1685055b5dcd8c17f74010e8c71c35f0253855bd331'
+
+# --- # H2 In-Memory
+# spring:
+#   jpa:
+#     hibernate:
+#       ddl-auto: create-drop
+#   ## Datasource
+#   datasource:
+#     url: jdbc:h2:mem:testdb
+#     username: 's53kr_lm8a6r'
+#     password: '$p@s5w0rD_s53k12x'
 
 #-----------------------------------
 --- # Security
