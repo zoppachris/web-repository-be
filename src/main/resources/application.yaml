@@ -16,6 +16,10 @@ spring:
       max-file-size: 500KB
       max-request-size: 500KB
 
+logging:
+  level:
+    org.springframework.security.oauth2: trace
+
 #-----------------------------------
 --- # Database
 #-----------------------------------
