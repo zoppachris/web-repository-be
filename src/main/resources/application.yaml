@@ -5,7 +5,7 @@ spring:
   application:
     name: thesis-webrepo
 server:
-  port: 8080
+  port: ${PORT:9090}
   servlet:
     context-path: /api
 --- ## File upload limit
