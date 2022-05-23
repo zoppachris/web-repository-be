@@ -9,7 +9,7 @@ import id.msams.webrepo.srv.abs.CrudService;
 import id.msams.webrepo.srv.abs.CrudServiceImpl;
 
 @Configuration
-public class ServiceConfig {
+public class ServiceConf {
 
   @Bean
   public CrudService<Thesis, Long> thesisCrudService(ThesisRepo repo) {
