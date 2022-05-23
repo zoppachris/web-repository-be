@@ -19,6 +19,8 @@ public class DataRestConf implements RepositoryRestConfigurer {
         .allowCredentials(true)
     ;
     // @formatter:on
+
+    config.disableDefaultExposure();
   }
 
 }
