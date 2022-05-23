@@ -102,7 +102,8 @@ public class ApplicationConf {
     return new OpenAPI()
       .info(new Info()
         .title("Web Theses Repository")
-        .description("Web Theses Repository Back-End Service"))
+        .description("Web Theses Repository Back-End Service")
+        .version("v1.0.0"))
       .components(
         new Components()
           .addSchemas("jwt-claims", new Schema<Map<String, Object>>()
