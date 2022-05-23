@@ -39,7 +39,7 @@ application:
   security:
     # DEFINE ROUNDS OF VALIDATION
     # TO STRENGTHEN PASSWORD PROCESSING
-    strength: 16
+    strength: 8
     # DEFAULT LOGIN CREDENTIALS
     # WITH ROLE OF SYSTEM ADMIN
     default-login-enabled: true
@@ -54,3 +54,12 @@ application:
     url: cnurl
     username: uname
     password: paswd
+
+#-----------------------------------
+--- # Spring AutoDoc
+#-----------------------------------
+springdoc:
+  api-docs:
+    path: /oas
+  swagger-ui:
+    path: /swagger

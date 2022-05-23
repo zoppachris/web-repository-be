@@ -1,5 +1,6 @@
 package id.msams.webrepo.cfg;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,6 +24,11 @@ import id.msams.webrepo.dao.sec.UserDetails;
 import id.msams.webrepo.dao.sec.UserDetailsRepo;
 import id.msams.webrepo.dao.sec.UserRepo;
 import id.msams.webrepo.srv.AppUserDetailsSrvc;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -88,6 +94,22 @@ public class ApplicationConf {
   @Bean
   public AppUserDetailsSrvc appUserDetailsSrvc(UserRepo userRepo) {
     return new AppUserDetailsSrvc(userRepo);
+  }
+
+  @Bean
+  public OpenAPI openApi() {
+    // @formatter:off
+    return new OpenAPI()
+      .info(new Info()
+        .title("Web Theses Repository")
+        .description("Web Theses Repository Back-End Service"))
+      .components(
+        new Components()
+          .addSchemas("jwt-claims", new Schema<Map<String, Object>>()
+            .addProperty("iss", new StringSchema().example("self")))
+      )
+    ;
+    // @formatter:on
   }
 
 }
