@@ -69,6 +69,8 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     http
       .authorizeRequests()
         .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+        // API Spec Explorer endpoints
+        .antMatchers("/oas/**", "/swagger/**", "/explorer/**").permitAll()
         .anyRequest().hasAnyRole(SYSTEM_ADMIN_ROLE_NAME, RoleType.SUPER_ADMIN.roleName())
         .and()
       .cors().and()

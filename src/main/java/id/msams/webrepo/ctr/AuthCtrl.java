@@ -40,7 +40,7 @@ public class AuthCtrl {
   private final JwtEncoder jwtEncoder;
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginReq body) {
+  public ResponseEntity<LoginRes> login(@RequestBody LoginReq body) {
     UserPrincipal user = (UserPrincipal) appUserDetailsSrvc.loadUserByUsername(body.getUsername());
     if (!passwordEncoder.matches(body.getPassword(), user.getPassword()))
       throw new UsernameNotFoundException("");
