@@ -36,16 +36,6 @@ public class FacultyCtrl {
     return svc.findAll(spec, page);
   }
 
-  @GetMapping(path = "/hardcore", produces = "application/json")
-  public ResponseEntity<?> findAllHardCore() {
-    return ResponseEntity.ok(svc.repo().findAll());
-  }
-
-  @PostMapping(path = "/hardcore-save", produces = "application/json")
-  public ResponseEntity<?> saveHardCore() {
-    return ResponseEntity.ok(svc.repo().save(new Faculty("random")));
-  }
-
   @GetMapping("/{id}")
   public ResponseEntity<EntityModel<Faculty>> findAll(@PathVariable("id") Long id) {
     return svc.findById(id);
