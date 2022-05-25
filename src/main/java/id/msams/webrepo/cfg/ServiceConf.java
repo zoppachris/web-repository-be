@@ -23,14 +23,6 @@ import id.msams.webrepo.dao.sec.UserDetails;
 import id.msams.webrepo.dao.sec.UserDetailsRepo;
 import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dao.sec.UserRepo;
-import id.msams.webrepo.dto.dat.LecturerDto;
-import id.msams.webrepo.dto.dat.StudentDto;
-import id.msams.webrepo.dto.dat.ThesisDto;
-import id.msams.webrepo.dto.dat.ref.FacultyDto;
-import id.msams.webrepo.dto.dat.ref.MajorDto;
-import id.msams.webrepo.dto.sec.RoleDto;
-import id.msams.webrepo.dto.sec.UserDetailsDto;
-import id.msams.webrepo.dto.sec.UserPrincipalDto;
 import id.msams.webrepo.srv.abs.CrudService;
 import id.msams.webrepo.srv.abs.CrudServiceImpl;
 
@@ -46,51 +38,51 @@ public class ServiceConf {
   private ModelMapper selMdlMap;
 
   @Bean
-  public CrudService<Long, Role, RoleDto> roleCrudService(RoleRepo repo,
-      PagedResourcesAssembler<RoleDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, Role> roleCrudService(RoleRepo repo,
+      PagedResourcesAssembler<Role> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
   @Bean
-  public CrudService<Long, Faculty, FacultyDto> facultyCrudService(FacultyRepo repo,
-      PagedResourcesAssembler<FacultyDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, Faculty> facultyCrudService(FacultyRepo repo,
+      PagedResourcesAssembler<Faculty> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
   @Bean
-  public CrudService<Long, Major, MajorDto> majorCrudService(MajorRepo repo,
-      PagedResourcesAssembler<MajorDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, Major> majorCrudService(MajorRepo repo,
+      PagedResourcesAssembler<Major> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
   @Bean
-  public CrudService<Long, Thesis, ThesisDto> thesisCrudService(ThesisRepo repo,
-      PagedResourcesAssembler<ThesisDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, Thesis> thesisCrudService(ThesisRepo repo,
+      PagedResourcesAssembler<Thesis> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
   @Bean
-  public CrudService<Long, UserPrincipal, UserPrincipalDto> userRepoCrudService(UserRepo repo,
-      PagedResourcesAssembler<UserPrincipalDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, UserPrincipal> userRepoCrudService(UserRepo repo,
+      PagedResourcesAssembler<UserPrincipal> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
   @Bean
-  public CrudService<Long, UserDetails, UserDetailsDto> userDetailsCrudService(UserDetailsRepo repo,
-      PagedResourcesAssembler<UserDetailsDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, UserDetails> userDetailsCrudService(UserDetailsRepo repo,
+      PagedResourcesAssembler<UserDetails> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
   @Bean
-  public CrudService<Long, Student, StudentDto> studentCrudService(StudentRepo repo,
-      PagedResourcesAssembler<StudentDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, Student> studentCrudService(StudentRepo repo,
+      PagedResourcesAssembler<Student> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
   @Bean
-  public CrudService<Long, Lecturer, LecturerDto> lecturerCrudService(LecturerRepo repo,
-      PagedResourcesAssembler<LecturerDto> resourceAssembler) {
-    return new CrudServiceImpl<>(mdlMap, selMdlMap, repo, resourceAssembler);
+  public CrudService<Long, Lecturer> lecturerCrudService(LecturerRepo repo,
+      PagedResourcesAssembler<Lecturer> resourceAssembler) {
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
   }
 
 }

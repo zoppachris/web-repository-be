@@ -5,6 +5,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.toedter.spring.hateoas.jsonapi.JsonApiConfiguration;
+
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,11 +114,35 @@ public class ApplicationConf {
         .version("v1.0.0"))
       .components(
         new Components()
-          .addSchemas("jwt-claims", new Schema<Map<String, Object>>()
+          .addSchemas("JwtClaims", new Schema<Map<String, Object>>()
             .addProperty("iss", new StringSchema().example("self")))
       )
     ;
     // @formatter:on
+  }
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    ObjectMapper objMap = new ObjectMapper();
+    objMap.enable(
+        SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+        SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+    objMap.enable(
+        DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+    return objMap;
+  }
+
+  @Bean
+  public JsonApiConfiguration jsonApiConfiguration() {
+    return new JsonApiConfiguration()
+        .withObjectMapperCustomizer(objMap -> {
+          objMap.enable(
+              SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+              SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+          objMap.enable(
+              DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+          objMap.registerModule(new JavaTimeModule());
+        });
   }
 
   @Bean

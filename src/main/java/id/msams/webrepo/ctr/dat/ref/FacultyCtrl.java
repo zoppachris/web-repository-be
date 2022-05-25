@@ -1,4 +1,4 @@
-package id.msams.webrepo.ctr.dat;
+package id.msams.webrepo.ctr.dat.ref;
 
 import com.sipios.springsearch.anotation.SearchSpec;
 
@@ -19,37 +19,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import id.msams.webrepo.ctr.abs.JsonApiRequestMapping;
-import id.msams.webrepo.dao.dat.Thesis;
+import id.msams.webrepo.dao.dat.ref.Faculty;
 import id.msams.webrepo.srv.abs.CrudService;
 import id.msams.webrepo.srv.abs.SaveType;
 
 @RestController
-@JsonApiRequestMapping(path = "/theses")
-public class ThesisCtrl {
+@JsonApiRequestMapping(path = "/faculties")
+public class FacultyCtrl {
 
   @Autowired
-  private CrudService<Long, Thesis> svc;
+  private CrudService<Long, Faculty> svc;
 
   @GetMapping
-  public ResponseEntity<PagedModel<EntityModel<Thesis>>> findAll(
-      @SearchSpec(searchParam = "search") Specification<Thesis> spec, Pageable page) {
+  public ResponseEntity<PagedModel<EntityModel<Faculty>>> findAll(
+      @SearchSpec(searchParam = "search") Specification<Faculty> spec, Pageable page) {
     return svc.findAll(spec, page);
   }
 
+  @GetMapping(path = "/hardcore", produces = "application/json")
+  public ResponseEntity<?> findAllHardCore() {
+    return ResponseEntity.ok(svc.repo().findAll());
+  }
+
+  @PostMapping(path = "/hardcore-save", produces = "application/json")
+  public ResponseEntity<?> saveHardCore() {
+    return ResponseEntity.ok(svc.repo().save(new Faculty("random")));
+  }
+
   @GetMapping("/{id}")
-  public ResponseEntity<EntityModel<Thesis>> findAll(@PathVariable("id") Long id) {
+  public ResponseEntity<EntityModel<Faculty>> findAll(@PathVariable("id") Long id) {
     return svc.findById(id);
   }
 
-  @PostMapping({ "/", "/{id}" })
-  public ResponseEntity<EntityModel<Thesis>> save(@Nullable @PathVariable("id") Long id,
-      @RequestBody Thesis body) {
+  @PostMapping({ "", "/{id}" })
+  public ResponseEntity<EntityModel<Faculty>> save(@Nullable @PathVariable("id") Long id,
+      @RequestBody Faculty body) {
     return svc.save(id, body, SaveType.UPSERT);
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<EntityModel<Thesis>> savePartial(@PathVariable("id") Long id,
-      @RequestBody Thesis body) {
+  public ResponseEntity<EntityModel<Faculty>> savePartial(@PathVariable("id") Long id,
+      @RequestBody Faculty body) {
     return svc.save(id, body, SaveType.PARTIAL);
   }
 

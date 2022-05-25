@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -17,27 +18,25 @@ import org.springframework.lang.Nullable;
 import id.msams.webrepo.dao.abs.BaseModel;
 import id.msams.webrepo.dao.abs.JpaSpecificationRepository;
 
-public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>, D> implements CrudService<K, T, D> {
+public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> implements CrudService<K, T> {
 
-  private final ModelMapper mdlMap;
   private final ModelMapper selMdlMap;
 
   private final JpaSpecificationRepository<T, K> repo;
-  private final PagedResourcesAssembler<D> resourcesAssembler;
+  private final PagedResourcesAssembler<T> resourcesAssembler;
 
-  private final RepresentationModelAssembler<D, EntityModel<D>> resourceAssembler;
+  private final RepresentationModelAssembler<T, EntityModel<T>> resourceAssembler;
 
   @Autowired
-  public CrudServiceImpl(@Qualifier("modelMapper") ModelMapper mdlMap,
-      @Qualifier("selectiveModelMapper") ModelMapper selMdlMap, JpaSpecificationRepository<T, K> repo,
-      PagedResourcesAssembler<D> resourcesAssembler) {
-    this.mdlMap = mdlMap;
+  public CrudServiceImpl(@Qualifier("selectiveModelMapper") ModelMapper selMdlMap,
+      JpaSpecificationRepository<T, K> repo,
+      PagedResourcesAssembler<T> resourcesAssembler) {
     this.selMdlMap = selMdlMap;
 
     this.repo = repo;
     this.resourcesAssembler = resourcesAssembler;
 
-    this.resourceAssembler = entity -> EntityModel.of(mdlMap.map(entity, this.projectionType()));
+    this.resourceAssembler = entity -> EntityModel.of(entity);
   }
 
   @Override
@@ -46,22 +45,21 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>, D> 
   }
 
   @Override
-  public ResponseEntity<PagedModel<EntityModel<D>>> findAll(Specification<T> spec,
+  public ResponseEntity<PagedModel<EntityModel<T>>> findAll(Specification<T> spec,
       Pageable page) {
     return ResponseEntity.ok(
         resourcesAssembler.toModel(
-            repo.findAll(page)
-                .map(item -> mdlMap.map(item, this.projectionType())),
+            repo.findAll(page),
             resourceAssembler));
   }
 
   @Override
-  public ResponseEntity<EntityModel<D>> findById(K id) {
+  public ResponseEntity<EntityModel<T>> findById(K id) {
     return ResponseEntity.ok(
         resourceAssembler.toModel(
-            mdlMap.map(
-                repo.findById(id).orElseThrow(entityNotFound(id)),
-                this.projectionType())));
+            repo.findById(id)
+                .orElseThrow(
+                    entityNotFound(id))));
   }
 
   private T insert(K id, T data) {
@@ -73,21 +71,27 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>, D> 
   }
 
   private T upsert(K id, T data) {
-    T dataToSave = repo.findById(id).orElseGet(() -> {
+    T dataToSave;
+    if (id != null) {
+      dataToSave = repo.findById(id).orElseGet(() -> {
+        data.setId(id);
+        return data;
+      });
+    } else {
       data.setId(id);
-      return data;
-    });
+      dataToSave = data;
+    }
     return repo.save(dataToSave);
   }
 
   private T delsert(K id, T data) {
-    if (repo.existsById(id))
+    if (id != null && repo.existsById(id))
       repo.deleteById(id);
     return upsert(id, data);
   }
 
   private T update(K id, T data) {
-    if (repo.existsById(id)) {
+    if (id != null && repo.existsById(id)) {
       return upsert(id, data);
     } else {
       throw entityNotFound(id).get();
@@ -95,7 +99,7 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>, D> 
   }
 
   private T partial(K id, T data) {
-    if (repo.existsById(id)) {
+    if (id != null && repo.existsById(id)) {
       T existingData = repo.getById(id);
       selMdlMap.map(data, existingData);
       return upsert(id, existingData);
@@ -105,7 +109,7 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>, D> 
   }
 
   @Override
-  public ResponseEntity<EntityModel<D>> save(@Nullable K id, T data, SaveType strategy) {
+  public ResponseEntity<EntityModel<T>> save(@Nullable K id, T data, SaveType strategy) {
     T savedData;
     switch (strategy) {
       case INSERT:
@@ -127,8 +131,16 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>, D> 
         throw new UnsupportedOperationException("Unknown saving strategy");
     }
     return ResponseEntity.ok(
-        resourceAssembler.toModel(
-            mdlMap.map(savedData, this.projectionType())));
+        resourceAssembler.toModel(savedData));
+  }
+
+  @Override
+  public ResponseEntity<RepresentationModel<?>> delete(K id) {
+    if (!repo.existsById(id))
+      throw this.entityNotFound(id).get();
+
+    repo.deleteById(id);
+    return ResponseEntity.ok(RepresentationModel.of(null));
   }
 
 }
