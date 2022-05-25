@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
-public class Student extends BaseModel {
+public class Student extends BaseModel<Long> {
 
   @Column(nullable = false)
   private String nim;

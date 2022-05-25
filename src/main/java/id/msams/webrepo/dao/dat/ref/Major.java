@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
-public class Major extends BaseModel {
+public class Major extends BaseModel<Long> {
 
   @Column(nullable = false)
   private String name;

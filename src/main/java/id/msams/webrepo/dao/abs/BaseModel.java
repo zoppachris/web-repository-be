@@ -31,12 +31,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseModel implements Serializable {
+public abstract class BaseModel<K extends Serializable> implements Serializable {
 
   @Id
   @Column
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private K id;
 
   @ManyToOne(optional = true, cascade = CascadeType.ALL)
   @JoinColumn(name = "created_by", nullable = true, updatable = false)

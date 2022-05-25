@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
-public class UserDetails extends BaseModel {
+public class UserDetails extends BaseModel<Long> {
 
   @Column(nullable = false)
   private String name;

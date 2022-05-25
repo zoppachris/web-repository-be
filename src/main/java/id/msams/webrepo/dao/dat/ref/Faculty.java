@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
-public class Faculty extends BaseModel {
+public class Faculty extends BaseModel<Long> {
 
   @Column(nullable = false)
   private String name;

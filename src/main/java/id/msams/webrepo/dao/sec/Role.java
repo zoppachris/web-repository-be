@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
-public class Role extends BaseModel implements org.springframework.security.core.GrantedAuthority {
+public class Role extends BaseModel<Long> implements org.springframework.security.core.GrantedAuthority {
 
   @Enumerated(EnumType.STRING)
   @Column(unique = true, nullable = false)
