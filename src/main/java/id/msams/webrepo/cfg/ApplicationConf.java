@@ -53,6 +53,19 @@ public class ApplicationConf {
   private static final String SUPER_ADMIN_NAME = "Super Admin";
 
   public Role initSystemRole(RoleRepo roleRepo) {
+    Optional<Role> admin = roleRepo.findOneByName(RoleType.ADMIN);
+    if (!admin.isPresent()) {
+      roleRepo.save(Role.builder().name(RoleType.ADMIN).build());
+    }
+    Optional<Role> lecturer = roleRepo.findOneByName(RoleType.LECTURER);
+    if (!lecturer.isPresent()) {
+      roleRepo.save(Role.builder().name(RoleType.LECTURER).build());
+    }
+    Optional<Role> student = roleRepo.findOneByName(RoleType.STUDENT);
+    if (!student.isPresent()) {
+      roleRepo.save(Role.builder().name(RoleType.STUDENT).build());
+    }
+
     Optional<Role> superAdmin = roleRepo.findOneByName(RoleType.SUPER_ADMIN);
     if (!superAdmin.isPresent()) {
       return roleRepo.save(Role.builder().name(RoleType.SUPER_ADMIN).build());
