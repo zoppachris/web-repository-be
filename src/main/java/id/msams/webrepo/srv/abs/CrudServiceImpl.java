@@ -81,16 +81,14 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
   }
 
   private T upsert(K id, T data) {
-    T dataToSave;
+    T dataToSave = data;
     if (id != null) {
       dataToSave = repo.findById(id).orElseGet(() -> {
-        data.setId(id);
         return data;
       });
-    } else {
-      data.setId(id);
-      dataToSave = data;
     }
+    selMdlMap.map(data, dataToSave);
+    dataToSave.setId(id);
     return repo.save(dataToSave);
   }
 

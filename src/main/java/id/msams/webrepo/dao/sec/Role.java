@@ -10,6 +10,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
 
 import id.msams.webrepo.dao.abs.BaseModel;
@@ -27,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table
 @JsonApiTypeForClass(value = "role")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Role extends BaseModel<Long> implements org.springframework.security.core.GrantedAuthority {
 
   @Enumerated(EnumType.STRING)
