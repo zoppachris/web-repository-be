@@ -1,6 +1,7 @@
 package id.msams.webrepo.srv.abs;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.lang.Nullable;
 
 import id.msams.webrepo.dao.abs.BaseModel;
 import id.msams.webrepo.dao.abs.JpaSpecificationRepository;
+import id.msams.webrepo.ext.i18n.utility.MessageUtil;
 
 public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> implements CrudService<K, T> {
 
@@ -27,16 +29,28 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
 
   private final RepresentationModelAssembler<T, EntityModel<T>> resourceAssembler;
 
+  private final MessageUtil msg;
+
   @Autowired
   public CrudServiceImpl(@Qualifier("selectiveModelMapper") ModelMapper selMdlMap,
       JpaSpecificationRepository<T, K> repo,
-      PagedResourcesAssembler<T> resourcesAssembler) {
+      PagedResourcesAssembler<T> resourcesAssembler, MessageUtil msg) {
     this.selMdlMap = selMdlMap;
 
     this.repo = repo;
     this.resourcesAssembler = resourcesAssembler;
 
     this.resourceAssembler = entity -> EntityModel.of(entity);
+
+    this.msg = msg;
+  }
+
+  private Supplier<EntityNotFoundException> entityNotFound(K id) {
+    return () -> new EntityNotFoundException(msg.get("SYSTEM.ERROR.ENTITY.NOT-FOUND.DETAIL", id));
+  }
+
+  private Supplier<EntityExistingException> entityExisting(K id) {
+    return () -> new EntityExistingException(msg.get("SYSTEM.ERROR.ENTITY.EXISTING.DETAIL", id));
   }
 
   @Override

@@ -26,6 +26,7 @@ import id.msams.webrepo.dao.sec.Role;
 import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dto.sec.LoginReq;
 import id.msams.webrepo.dto.sec.LoginRes;
+import id.msams.webrepo.ext.i18n.utility.MessageUtil;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,11 +41,13 @@ public class AuthCtrl {
 
   private final JwtEncoder jwtEncoder;
 
+  private final MessageUtil msg;
+
   @PostMapping("/login")
   public ResponseEntity<EntityModel<LoginRes>> login(@RequestBody LoginReq body) {
     UserPrincipal user = (UserPrincipal) appUserDetailsSrvc.loadUserByUsername(body.getUsername());
     if (!passwordEncoder.matches(body.getPassword(), user.getPassword()))
-      throw new UsernameNotFoundException("");
+      throw new UsernameNotFoundException(msg.get("SYSTEM.ERROR.AUTH.INVALID-CREDENTIALS.DETAIL"));
 
     LocalDateTime issuedTimestamp = LocalDateTime.now();
     Jwt jwt = jwtEncoder.encode(JwtEncoderParameters

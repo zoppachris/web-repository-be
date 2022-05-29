@@ -8,13 +8,6 @@ server:
   port: 8080
   servlet:
     context-path: /api
---- ## File upload limit
-spring:
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 500KB
-      max-request-size: 500KB
 
 #-----------------------------------
 --- # Database
@@ -63,13 +56,22 @@ application:
     default-password: sysadm
 
 #-----------------------------------
---- # Storage Service (MinIO)
+--- # File Storage --- MinIO
 #-----------------------------------
+
 application:
   minio:
-    url: cnurl
-    username: uname
-    password: paswd
+    url: http://127.0.0.1:9000
+    username: s53kr_lm8a6r
+    password: $p@s5w0rD_s53k12x
+    get-error-message: SYSTEM.ERROR.STORAGE.DOWNLOAD-FAILURE.DETAIL
+    post-error-message: SYSTEM.ERROR.STORAGE.UPLOAD-FAILURE.DETAIL
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500KB
+      max-request-size: 500KB
 
 #-----------------------------------
 --- # Spring AutoDoc
@@ -79,3 +81,12 @@ springdoc:
     path: /oas
   swagger-ui:
     path: /swagger
+
+#-----------------------------------
+--- # L10n & i18n
+#-----------------------------------
+
+spring:
+  messages:
+    encoding: UTF-8
+    basename: i18n/messages

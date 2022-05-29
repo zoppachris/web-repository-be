@@ -23,7 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import id.msams.webrepo.cfg.prp.SecurityProp;
 import id.msams.webrepo.dao.sec.Role;
 import id.msams.webrepo.dao.sec.RoleRepo;
 import id.msams.webrepo.dao.sec.RoleType;
@@ -31,6 +30,7 @@ import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dao.sec.UserDetails;
 import id.msams.webrepo.dao.sec.UserDetailsRepo;
 import id.msams.webrepo.dao.sec.UserRepo;
+import id.msams.webrepo.ext.i18n.utility.MessageUtil;
 import id.msams.webrepo.srv.AppUserDetailsSrvc;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -100,8 +100,8 @@ public class ApplicationConf {
   }
 
   @Bean
-  public AppUserDetailsSrvc appUserDetailsSrvc(UserRepo userRepo) {
-    return new AppUserDetailsSrvc(userRepo);
+  public AppUserDetailsSrvc appUserDetailsSrvc(UserRepo userRepo, MessageUtil msg) {
+    return new AppUserDetailsSrvc(userRepo, msg);
   }
 
   @Bean

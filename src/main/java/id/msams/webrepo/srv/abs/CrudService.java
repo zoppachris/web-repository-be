@@ -1,7 +1,6 @@
 package id.msams.webrepo.srv.abs;
 
 import java.io.Serializable;
-import java.util.function.Supplier;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,15 +28,5 @@ public interface CrudService<K extends Serializable, T extends BaseModel<K>> {
   }
 
   public ResponseEntity<RepresentationModel<?>> delete(K id);
-
-  default Supplier<EntityNotFoundException> entityNotFound(K id) {
-    return () -> new EntityNotFoundException(
-        "Entity with id " + id + " could not be found");
-  }
-
-  default Supplier<EntityExistingException> entityExisting(K id) {
-    return () -> new EntityExistingException(
-        "Entity with id " + id + " already exists");
-  }
 
 }

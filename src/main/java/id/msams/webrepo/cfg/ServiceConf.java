@@ -23,6 +23,7 @@ import id.msams.webrepo.dao.sec.UserDetails;
 import id.msams.webrepo.dao.sec.UserDetailsRepo;
 import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dao.sec.UserRepo;
+import id.msams.webrepo.ext.i18n.utility.MessageUtil;
 import id.msams.webrepo.srv.abs.CrudService;
 import id.msams.webrepo.srv.abs.CrudServiceImpl;
 
@@ -37,52 +38,55 @@ public class ServiceConf {
   @Qualifier("selectiveModelMapper")
   private ModelMapper selMdlMap;
 
+  @Autowired
+  private MessageUtil msg;
+
   @Bean
   public CrudService<Long, Role> roleCrudService(RoleRepo repo,
       PagedResourcesAssembler<Role> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
   @Bean
   public CrudService<Long, Faculty> facultyCrudService(FacultyRepo repo,
       PagedResourcesAssembler<Faculty> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
   @Bean
   public CrudService<Long, Major> majorCrudService(MajorRepo repo,
       PagedResourcesAssembler<Major> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
   @Bean
   public CrudService<Long, Thesis> thesisCrudService(ThesisRepo repo,
       PagedResourcesAssembler<Thesis> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
   @Bean
   public CrudService<Long, UserPrincipal> userRepoCrudService(UserRepo repo,
       PagedResourcesAssembler<UserPrincipal> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
   @Bean
   public CrudService<Long, UserDetails> userDetailsCrudService(UserDetailsRepo repo,
       PagedResourcesAssembler<UserDetails> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
   @Bean
   public CrudService<Long, Student> studentCrudService(StudentRepo repo,
       PagedResourcesAssembler<Student> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
   @Bean
   public CrudService<Long, Lecturer> lecturerCrudService(LecturerRepo repo,
       PagedResourcesAssembler<Lecturer> resourceAssembler) {
-    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler);
+    return new CrudServiceImpl<>(selMdlMap, repo, resourceAssembler, msg);
   }
 
 }

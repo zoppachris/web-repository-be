@@ -27,7 +27,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
-import id.msams.webrepo.cfg.prp.SecurityProp;
 import id.msams.webrepo.srv.AppUserDetailsSrvc;
 import lombok.RequiredArgsConstructor;
 

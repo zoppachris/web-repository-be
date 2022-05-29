@@ -1,4 +1,4 @@
-package id.msams.webrepo.cfg.prp;
+package id.msams.webrepo.cfg;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
