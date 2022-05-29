@@ -1,6 +1,7 @@
 package id.msams.webrepo.ctr;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import com.sipios.springsearch.anotation.SearchSpec;
 
@@ -74,10 +75,10 @@ public class UserCtrl {
 
     switch (type) {
       case "admin":
-        newUser.setRoles(Set.of(roleRepo.findOneByName(RoleType.ADMIN).get()));
+        newUser.setRoles(new HashSet<>(Arrays.asList(roleRepo.findOneByName(RoleType.ADMIN).get())));
         break;
       case "lecturer":
-        newUser.setRoles(Set.of(roleRepo.findOneByName(RoleType.LECTURER).get()));
+        newUser.setRoles(new HashSet<>(Arrays.asList(roleRepo.findOneByName(RoleType.LECTURER).get())));
         Lecturer newLecturer = Lecturer.builder()
             .nidn(newUser.getUsername())
             .build();
@@ -86,7 +87,7 @@ public class UserCtrl {
         newLecturer.setFaculty(mdlMap.map(body.getEtc().get("faculty"), Faculty.class));
         break;
       case "student":
-        newUser.setRoles(Set.of(roleRepo.findOneByName(RoleType.STUDENT).get()));
+        newUser.setRoles(new HashSet<>(Arrays.asList(roleRepo.findOneByName(RoleType.STUDENT).get())));
         Student newStudent = Student.builder()
             .nim(newUser.getUsername())
             .year(Integer.parseInt(body.getEtc().get("year").toString()))
