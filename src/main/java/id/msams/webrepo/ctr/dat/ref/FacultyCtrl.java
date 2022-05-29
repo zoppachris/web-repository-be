@@ -1,4 +1,4 @@
-package id.msams.webrepo.ctr.dat;
+package id.msams.webrepo.ctr.dat.ref;
 
 import com.sipios.springsearch.anotation.SearchSpec;
 
@@ -16,21 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import id.msams.webrepo.ctr.abs.JsonApiRequestMapping;
-import id.msams.webrepo.dao.dat.Thesis;
+import id.msams.webrepo.dao.dat.ref.Faculty;
 import id.msams.webrepo.srv.abs.CrudService;
 import id.msams.webrepo.srv.abs.SaveType;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@JsonApiRequestMapping(path = "/theses")
+@JsonApiRequestMapping(path = "/faculties")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ThesisCtrl {
+public class FacultyCtrl {
 
-  private final CrudService<Long, Thesis> svc;
+  private final CrudService<Long, Faculty> svc;
 
   @GetMapping
   public ResponseEntity<?> findAll(
-      @SearchSpec(searchParam = "search") Specification<Thesis> spec, Pageable paging) {
+      @SearchSpec(searchParam = "search") Specification<Faculty> spec, Pageable paging) {
     return svc.findAll(spec, paging);
   }
 
@@ -41,13 +41,13 @@ public class ThesisCtrl {
 
   @PostMapping({ "", "/{id}" })
   public ResponseEntity<?> save(@Nullable @PathVariable("id") Long id,
-      @RequestBody Thesis body) {
+      @RequestBody Faculty body) {
     return svc.save(id, body, SaveType.UPSERT);
   }
 
   @PatchMapping("/{id}")
   public ResponseEntity<?> savePartial(@PathVariable("id") Long id,
-      @RequestBody Thesis body) {
+      @RequestBody Faculty body) {
     return svc.save(id, body, SaveType.PARTIAL);
   }
 

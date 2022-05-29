@@ -6,12 +6,18 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -31,38 +37,31 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
-public class UserPrincipal extends BaseModel implements org.springframework.security.core.userdetails.UserDetails {
+@JsonApiTypeForClass(value = "user")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class UserPrincipal extends BaseModel<Long>
+    implements org.springframework.security.core.userdetails.UserDetails {
 
   @Column(unique = true, nullable = false)
   private String username;
-  @JsonIgnore
   @Column(nullable = false)
+  @JsonProperty(access = Access.WRITE_ONLY)
   private String password;
 
   @Column(nullable = false)
   private Boolean active;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles")
   private Set<Role> roles;
 
-  @OneToOne(mappedBy = "user", optional = false, cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", optional = false, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
   private UserDetails userDetails;
 
-  @OneToOne(mappedBy = "user", optional = true, cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", optional = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
   private Lecturer lecturer;
-  @OneToOne(mappedBy = "user", optional = true, cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", optional = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
   private Student student;
-
-  @JsonIgnore
-  public boolean isLecturer() {
-    return lecturer != null;
-  }
-
-  @JsonIgnore
-  public boolean isStudent() {
-    return student != null;
-  }
 
   @Override
   @JsonIgnore

@@ -9,6 +9,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import id.msams.webrepo.dao.abs.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +26,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
-public class Role extends BaseModel implements org.springframework.security.core.GrantedAuthority {
+@JsonApiTypeForClass(value = "role")
+public class Role extends BaseModel<Long> implements org.springframework.security.core.GrantedAuthority {
 
   @Enumerated(EnumType.STRING)
   @Column(unique = true, nullable = false)
@@ -31,6 +35,7 @@ public class Role extends BaseModel implements org.springframework.security.core
 
   @EqualsAndHashCode.Exclude
   @ManyToMany(mappedBy = "roles")
+  @JsonBackReference
   private Set<UserPrincipal> users;
 
   @Override

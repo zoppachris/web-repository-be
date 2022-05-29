@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,8 +27,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
-import id.msams.webrepo.cfg.prp.SecurityProp;
-import id.msams.webrepo.dao.sec.RoleType;
 import id.msams.webrepo.srv.AppUserDetailsSrvc;
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +37,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 
   private final SecurityProp securityProp;
   private final PasswordEncoder passwordEncoder;
-  private final AppUserDetailsSrvc appUserDetailsSrvc;
+  private final AppUserDetailsSrvc userDetailsSvc;
 
   private static final String SYSTEM_ADMIN_ROLE_NAME = "SYSTEM_ADMIN";
 
@@ -68,10 +65,14 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     // @formatter:off
     http
       .authorizeRequests()
+        /*
         .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
         // API Spec Explorer endpoints
         .antMatchers("/oas/**", "/swagger/**", "/explorer/**").permitAll()
         .anyRequest().hasAnyRole(SYSTEM_ADMIN_ROLE_NAME, RoleType.SUPER_ADMIN.roleName())
+        /*/
+        .anyRequest().permitAll()
+        //*/
         .and()
       .cors().and()
       .csrf().disable()
@@ -110,7 +111,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
       ;
     }
     auth
-      .userDetailsService(appUserDetailsSrvc)
+      .userDetailsService(userDetailsSvc)
         .passwordEncoder(passwordEncoder)
     ;
     // @formatter:on

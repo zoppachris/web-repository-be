@@ -6,6 +6,8 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiModelBuilder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -18,32 +20,35 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import id.msams.webrepo.ctr.abs.JsonApiRequestMapping;
 import id.msams.webrepo.dao.sec.Role;
 import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dto.sec.LoginReq;
 import id.msams.webrepo.dto.sec.LoginRes;
+import id.msams.webrepo.ext.i18n.utility.MessageUtil;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/auth")
+@JsonApiRequestMapping("/auth")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthCtrl {
 
-  private final UserDetailsService appUserDetailsSrvc;
+  private final UserDetailsService userDetailsSvc;
   private final PasswordEncoder passwordEncoder;
   @Qualifier("rsaKeyPair")
   private final KeyPair keys;
 
   private final JwtEncoder jwtEncoder;
 
+  private final MessageUtil msg;
+
   @PostMapping("/login")
-  public ResponseEntity<LoginRes> login(@RequestBody LoginReq body) {
-    UserPrincipal user = (UserPrincipal) appUserDetailsSrvc.loadUserByUsername(body.getUsername());
+  public ResponseEntity<?> login(@RequestBody LoginReq body) {
+    UserPrincipal user = (UserPrincipal) userDetailsSvc.loadUserByUsername(body.getUsername());
     if (!passwordEncoder.matches(body.getPassword(), user.getPassword()))
-      throw new UsernameNotFoundException("");
+      throw new UsernameNotFoundException(msg.get("SYSTEM.ERROR.AUTH.INVALID-CREDENTIALS.DETAIL"));
 
     LocalDateTime issuedTimestamp = LocalDateTime.now();
     Jwt jwt = jwtEncoder.encode(JwtEncoderParameters
@@ -59,11 +64,15 @@ public class AuthCtrl {
             .claim("scp", user.getRoles().stream().map(Role::getAuthority).collect(Collectors.toSet()))
             .build()));
 
-    return ResponseEntity.ok(LoginRes.builder()
-        .type("Bearer")
-        .accessToken(jwt.getTokenValue())
-        .claims(jwt.getClaims())
-        .build());
+    return ResponseEntity.ok(
+        JsonApiModelBuilder.jsonApiModel().model(
+            LoginRes.builder()
+                .id(System.currentTimeMillis())
+                .type("Bearer")
+                .accessToken(jwt.getTokenValue())
+                .claims(jwt.getClaims())
+                .build())
+            .build());
   }
 
 }

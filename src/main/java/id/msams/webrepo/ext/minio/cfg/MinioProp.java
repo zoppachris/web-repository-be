@@ -1,4 +1,4 @@
-package id.msams.webrepo.cfg.prp;
+package id.msams.webrepo.ext.minio.cfg;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -12,4 +12,6 @@ public class MinioProp {
   private String url;
   private String username;
   private String password;
+  private String getErrorMessage;
+  private String postErrorMessage;
 }

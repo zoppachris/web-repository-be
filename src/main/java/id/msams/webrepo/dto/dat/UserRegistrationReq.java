@@ -1,8 +1,9 @@
-package id.msams.webrepo.dto.sec;
+package id.msams.webrepo.dto.dat;
+
+import java.util.Map;
 
 import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,14 +11,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@JsonApiTypeForClass(value = "login-request")
-public class LoginReq {
+@NoArgsConstructor
+@JsonApiTypeForClass("user-registration-request")
+public class UserRegistrationReq {
 
-  @Schema(example = "user123")
   private String username;
-  @Schema(example = "secret123")
   private String password;
+
+  private String name;
+  private String pic;
+
+  private Map<String, Object> etc;
 
 }

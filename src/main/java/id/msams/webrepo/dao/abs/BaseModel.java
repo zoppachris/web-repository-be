@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -31,12 +34,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseModel implements Serializable {
+public abstract class BaseModel<K extends Serializable> implements Serializable {
 
   @Id
   @Column
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private K id;
 
   @ManyToOne(optional = true, cascade = CascadeType.ALL)
   @JoinColumn(name = "created_by", nullable = true, updatable = false)
@@ -44,6 +47,7 @@ public abstract class BaseModel implements Serializable {
   private UserPrincipal createdBy;
   @Column(nullable = false, updatable = false)
   @CreatedDate
+  @JsonFormat(shape = Shape.STRING)
   private LocalDateTime createdOn;
 
   @ManyToOne(optional = true, cascade = CascadeType.ALL)
@@ -52,6 +56,7 @@ public abstract class BaseModel implements Serializable {
   private UserPrincipal modifiedBy;
   @Column(nullable = true, updatable = true)
   @LastModifiedDate
+  @JsonFormat(shape = Shape.STRING)
   private LocalDateTime modifiedOn;
 
 }

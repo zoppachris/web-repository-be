@@ -5,6 +5,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.toedter.spring.hateoas.jsonapi.JsonApiConfiguration;
+
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import id.msams.webrepo.cfg.prp.SecurityProp;
 import id.msams.webrepo.dao.sec.Role;
 import id.msams.webrepo.dao.sec.RoleRepo;
 import id.msams.webrepo.dao.sec.RoleType;
@@ -23,6 +30,7 @@ import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dao.sec.UserDetails;
 import id.msams.webrepo.dao.sec.UserDetailsRepo;
 import id.msams.webrepo.dao.sec.UserRepo;
+import id.msams.webrepo.ext.i18n.utility.MessageUtil;
 import id.msams.webrepo.srv.AppUserDetailsSrvc;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -92,8 +100,8 @@ public class ApplicationConf {
   }
 
   @Bean
-  public AppUserDetailsSrvc appUserDetailsSrvc(UserRepo userRepo) {
-    return new AppUserDetailsSrvc(userRepo);
+  public AppUserDetailsSrvc appUserDetailsSrvc(UserRepo userRepo, MessageUtil msg) {
+    return new AppUserDetailsSrvc(userRepo, msg);
   }
 
   @Bean
@@ -106,11 +114,47 @@ public class ApplicationConf {
         .version("v1.0.0"))
       .components(
         new Components()
-          .addSchemas("jwt-claims", new Schema<Map<String, Object>>()
+          .addSchemas("JwtClaims", new Schema<Map<String, Object>>()
             .addProperty("iss", new StringSchema().example("self")))
       )
     ;
     // @formatter:on
+  }
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    ObjectMapper objMap = new ObjectMapper();
+    objMap.enable(
+        SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+        SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+    objMap.enable(
+        DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+    return objMap;
+  }
+
+  @Bean
+  public JsonApiConfiguration jsonApiConfiguration() {
+    return new JsonApiConfiguration()
+        .withObjectMapperCustomizer(objMap -> {
+          objMap.enable(
+              SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+              SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+          objMap.enable(
+              DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+          objMap.registerModule(new JavaTimeModule());
+        });
+  }
+
+  @Bean
+  public ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
+
+  @Bean
+  public ModelMapper selectiveModelMapper() {
+    ModelMapper mdlMap = new ModelMapper();
+    mdlMap.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+    return mdlMap;
   }
 
 }

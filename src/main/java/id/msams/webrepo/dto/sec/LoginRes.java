@@ -2,6 +2,9 @@ package id.msams.webrepo.dto.sec;
 
 import java.util.Map;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiId;
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +15,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonApiTypeForClass(value = "login-response")
 public class LoginRes {
+
+  @JsonApiId
+  private Long id;
 
   @Schema(example = "Bearer", description = "Type of credentials given for access. Current implementation only supports Bearer token.")
   private String type;
