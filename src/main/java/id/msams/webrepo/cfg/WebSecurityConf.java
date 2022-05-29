@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +28,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
+import id.msams.webrepo.dao.sec.RoleType;
 import id.msams.webrepo.srv.AppUserDetailsSrvc;
 import lombok.RequiredArgsConstructor;
 
@@ -65,11 +67,24 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     // @formatter:off
     http
       .authorizeRequests()
-        /*
+        //*
+        // system admin dan super admin boleh akses segalanya
+        .antMatchers("/**").hasAnyRole(SYSTEM_ADMIN_ROLE_NAME, RoleType.SUPER_ADMIN.roleName())
+        // login bisa diakses semuanya
         .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
-        // API Spec Explorer endpoints
+        // get untuk thesis, faculty, dan major, bisa diakses semuanya
+        .antMatchers(HttpMethod.GET, "/theses/**", "/faculties/**", "/majors/**").permitAll()
+        // admin punya akses penuh untuk manipulasi user, faculty, sama major
+        .antMatchers("/users/**", "/faculties/**", "/majors/**").hasRole(RoleType.ADMIN.roleName())
+        // student punya akses untuk ngebuat dan ngedit thesis
+        .antMatchers(HttpMethod.POST, "/theses/**").hasRole(RoleType.STUDENT.roleName())
+        .antMatchers(HttpMethod.PUT, "/theses/**").hasRole(RoleType.STUDENT.roleName())
+        // lecturer punya akses penuh untuk thesis
+        .antMatchers("/theses/**").hasRole(RoleType.LECTURER.roleName())
+        // api explorer dibolehin untuk semua orang
         .antMatchers("/oas/**", "/swagger/**", "/explorer/**").permitAll()
-        .anyRequest().hasAnyRole(SYSTEM_ADMIN_ROLE_NAME, RoleType.SUPER_ADMIN.roleName())
+        // sisanya, bisa diakses asalkan udah login
+        .anyRequest().authenticated()
         /*/
         .anyRequest().permitAll()
         //*/

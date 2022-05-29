@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@JsonApiRequestMapping("/data/storage")
+@JsonApiRequestMapping("/storage")
 public class StorageCtrl {
 
   private final MinioSrvc minio;
