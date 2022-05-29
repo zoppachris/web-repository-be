@@ -3,16 +3,17 @@ package id.msams.webrepo.srv.abs;
 import java.io.Serializable;
 import java.util.function.Supplier;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiModelBuilder;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.hateoas.PagedModel.PageMetadata;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 
@@ -23,25 +24,14 @@ import id.msams.webrepo.ext.i18n.utility.MessageUtil;
 public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> implements CrudService<K, T> {
 
   private final ModelMapper selMdlMap;
-
   private final JpaSpecificationRepository<T, K> repo;
-  private final PagedResourcesAssembler<T> resourcesAssembler;
-
-  private final RepresentationModelAssembler<T, EntityModel<T>> resourceAssembler;
-
   private final MessageUtil msg;
 
   @Autowired
   public CrudServiceImpl(@Qualifier("selectiveModelMapper") ModelMapper selMdlMap,
-      JpaSpecificationRepository<T, K> repo,
-      PagedResourcesAssembler<T> resourcesAssembler, MessageUtil msg) {
+      JpaSpecificationRepository<T, K> repo, MessageUtil msg) {
     this.selMdlMap = selMdlMap;
-
     this.repo = repo;
-    this.resourcesAssembler = resourcesAssembler;
-
-    this.resourceAssembler = entity -> EntityModel.of(entity);
-
     this.msg = msg;
   }
 
@@ -59,21 +49,25 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
   }
 
   @Override
-  public ResponseEntity<PagedModel<EntityModel<T>>> findAll(Specification<T> spec,
-      Pageable page) {
+  public ResponseEntity<RepresentationModel<?>> findAll(Specification<T> spec,
+      Pageable paging) {
+    Page<T> page = repo.findAll(paging);
     return ResponseEntity.ok(
-        resourcesAssembler.toModel(
-            repo.findAll(page),
-            resourceAssembler));
+        JsonApiModelBuilder.jsonApiModel().model(
+            PagedModel.of(
+                page.getContent(),
+                new PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements())))
+            .build());
   }
 
   @Override
-  public ResponseEntity<EntityModel<T>> findById(K id) {
+  public ResponseEntity<RepresentationModel<?>> findById(K id) {
     return ResponseEntity.ok(
-        resourceAssembler.toModel(
+        JsonApiModelBuilder.jsonApiModel().model(
             repo.findById(id)
                 .orElseThrow(
-                    entityNotFound(id))));
+                    entityNotFound(id)))
+            .build());
   }
 
   private T insert(K id, T data) {
@@ -123,7 +117,7 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
   }
 
   @Override
-  public ResponseEntity<EntityModel<T>> save(@Nullable K id, T data, SaveType strategy) {
+  public ResponseEntity<RepresentationModel<?>> save(@Nullable K id, T data, SaveType strategy) {
     T savedData;
     switch (strategy) {
       case INSERT:
@@ -145,7 +139,8 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
         throw new UnsupportedOperationException("Unknown saving strategy");
     }
     return ResponseEntity.ok(
-        resourceAssembler.toModel(savedData));
+        JsonApiModelBuilder.jsonApiModel().model(savedData)
+            .build());
   }
 
   @Override

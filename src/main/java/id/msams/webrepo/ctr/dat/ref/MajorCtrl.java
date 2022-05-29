@@ -5,9 +5,6 @@ import com.sipios.springsearch.anotation.SearchSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,30 +28,30 @@ public class MajorCtrl {
   private CrudService<Long, Major> svc;
 
   @GetMapping
-  public ResponseEntity<PagedModel<EntityModel<Major>>> findAll(
+  public ResponseEntity<?> findAll(
       @SearchSpec(searchParam = "search") Specification<Major> spec, Pageable page) {
     return svc.findAll(spec, page);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<EntityModel<Major>> findAll(@PathVariable("id") Long id) {
+  public ResponseEntity<?> findAll(@PathVariable("id") Long id) {
     return svc.findById(id);
   }
 
   @PostMapping({ "", "/{id}" })
-  public ResponseEntity<EntityModel<Major>> save(@Nullable @PathVariable("id") Long id,
+  public ResponseEntity<?> save(@Nullable @PathVariable("id") Long id,
       @RequestBody Major body) {
     return svc.save(id, body, SaveType.UPSERT);
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<EntityModel<Major>> savePartial(@PathVariable("id") Long id,
+  public ResponseEntity<?> savePartial(@PathVariable("id") Long id,
       @RequestBody Major body) {
     return svc.save(id, body, SaveType.PARTIAL);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<RepresentationModel<?>> delete(@PathVariable("id") Long id) {
+  public ResponseEntity<?> delete(@PathVariable("id") Long id) {
     return svc.delete(id);
   }
 

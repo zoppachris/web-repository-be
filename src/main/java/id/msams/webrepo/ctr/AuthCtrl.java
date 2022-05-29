@@ -6,9 +6,10 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiModelBuilder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,7 +45,7 @@ public class AuthCtrl {
   private final MessageUtil msg;
 
   @PostMapping("/login")
-  public ResponseEntity<EntityModel<LoginRes>> login(@RequestBody LoginReq body) {
+  public ResponseEntity<?> login(@RequestBody LoginReq body) {
     UserPrincipal user = (UserPrincipal) appUserDetailsSrvc.loadUserByUsername(body.getUsername());
     if (!passwordEncoder.matches(body.getPassword(), user.getPassword()))
       throw new UsernameNotFoundException(msg.get("SYSTEM.ERROR.AUTH.INVALID-CREDENTIALS.DETAIL"));
@@ -64,13 +65,14 @@ public class AuthCtrl {
             .build()));
 
     return ResponseEntity.ok(
-        EntityModel.of(
+        JsonApiModelBuilder.jsonApiModel().model(
             LoginRes.builder()
                 .id(System.currentTimeMillis())
                 .type("Bearer")
                 .accessToken(jwt.getTokenValue())
                 .claims(jwt.getClaims())
-                .build()));
+                .build())
+            .build());
   }
 
 }
