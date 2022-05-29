@@ -25,9 +25,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: copy to ssh
-        run: |
-          scp -o "StrictHostKeyChecking no" ./target/thesis-webrepo.jar root@103.157.97.165:/home/exe/be/thesis-webrepo.jar
-          repository123
-          scp -o "StrictHostKeyChecking no" ./target/thesis-webrepo.jar.original root@103.157.97.165:/home/exe/be/thesis-webrepo.jar.original
-          repository123
+      - name: copy 1
+        run: yes 'repository123' | scp -o "StrictHostKeyChecking no" ./target/thesis-webrepo.jar root@103.157.97.165:/home/exe/be/thesis-webrepo.jar
+      - name: copy 2
+        run: yes 'repository123' | scp -o "StrictHostKeyChecking no" ./target/thesis-webrepo.jar.original root@103.157.97.165:/home/exe/be/thesis-webrepo.jar.original
