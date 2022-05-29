@@ -28,6 +28,8 @@ jobs:
       - name: copy to ssh
         run: |
           scp ./target/thesis-webrepo.jar root@103.157.97.165:/home/exe/be/thesis-webrepo.jar
+          yes
           repository123
           scp ./target/thesis-webrepo.jar.original root@103.157.97.165:/home/exe/be/thesis-webrepo.jar.original
+          yes
           repository123
