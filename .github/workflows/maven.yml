@@ -27,9 +27,7 @@ jobs:
     steps:
       - name: copy to ssh
         run: |
-          scp ./target/thesis-webrepo.jar root@103.157.97.165:/home/exe/be/thesis-webrepo.jar
-          yes
+          scp -o "StrictHostKeyChecking no" ./target/thesis-webrepo.jar root@103.157.97.165:/home/exe/be/thesis-webrepo.jar
           repository123
-          scp ./target/thesis-webrepo.jar.original root@103.157.97.165:/home/exe/be/thesis-webrepo.jar.original
-          yes
+          scp -o "StrictHostKeyChecking no" ./target/thesis-webrepo.jar.original root@103.157.97.165:/home/exe/be/thesis-webrepo.jar.original
           repository123
