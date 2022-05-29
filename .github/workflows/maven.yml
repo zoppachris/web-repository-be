@@ -29,8 +29,8 @@ jobs:
       - name: copy
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: target/thesis-webrepo.jar
-          remote: home/exe/be/thesis-webrepo.jar
+          local: ${GITHUB_WORKSPACE}/target/thesis-webrepo.jar
+          remote: /home/exe/be/thesis-webrepo.jar
           host: 103.157.97.165
           username: root
           password: repository123
