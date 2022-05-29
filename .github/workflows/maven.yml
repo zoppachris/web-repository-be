@@ -25,6 +25,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: check
+        run: ls
       - name: copy 1
         run: scp -i .github/ssh/id_rsa.pub -o "StrictHostKeyChecking no" ./target/thesis-webrepo.jar root@103.157.97.165:/home/exe/be/thesis-webrepo.jar
       - name: copy 2
