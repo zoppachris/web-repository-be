@@ -37,7 +37,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 
   private final SecurityProp securityProp;
   private final PasswordEncoder passwordEncoder;
-  private final AppUserDetailsSrvc appUserDetailsSrvc;
+  private final AppUserDetailsSrvc userDetailsSvc;
 
   private static final String SYSTEM_ADMIN_ROLE_NAME = "SYSTEM_ADMIN";
 
@@ -111,7 +111,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
       ;
     }
     auth
-      .userDetailsService(appUserDetailsSrvc)
+      .userDetailsService(userDetailsSvc)
         .passwordEncoder(passwordEncoder)
     ;
     // @formatter:on

@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthCtrl {
 
-  private final UserDetailsService appUserDetailsSrvc;
+  private final UserDetailsService userDetailsSvc;
   private final PasswordEncoder passwordEncoder;
   @Qualifier("rsaKeyPair")
   private final KeyPair keys;
@@ -46,7 +46,7 @@ public class AuthCtrl {
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginReq body) {
-    UserPrincipal user = (UserPrincipal) appUserDetailsSrvc.loadUserByUsername(body.getUsername());
+    UserPrincipal user = (UserPrincipal) userDetailsSvc.loadUserByUsername(body.getUsername());
     if (!passwordEncoder.matches(body.getPassword(), user.getPassword()))
       throw new UsernameNotFoundException(msg.get("SYSTEM.ERROR.AUTH.INVALID-CREDENTIALS.DETAIL"));
 
