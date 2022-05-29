@@ -6,6 +6,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
 
 import id.msams.webrepo.dao.abs.BaseModel;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table
 @JsonApiTypeForClass(value = "major")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Major extends BaseModel<Long> {
 
   @Column(nullable = false)

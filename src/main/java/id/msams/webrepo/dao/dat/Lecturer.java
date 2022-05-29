@@ -2,11 +2,14 @@ package id.msams.webrepo.dao.dat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
 
 import id.msams.webrepo.dao.abs.BaseModel;
@@ -16,14 +19,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table
 @JsonApiTypeForClass(value = "lecturer")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Lecturer extends BaseModel<Long> {
 
   @Column(nullable = false)
@@ -33,7 +39,7 @@ public class Lecturer extends BaseModel<Long> {
   @JoinColumn(nullable = false, updatable = false)
   private Faculty faculty;
 
-  @OneToOne(optional = false)
+  @OneToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(unique = true, nullable = false, updatable = false)
   private UserPrincipal user;
 

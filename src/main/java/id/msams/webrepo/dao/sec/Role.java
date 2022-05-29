@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
 
 import id.msams.webrepo.dao.abs.BaseModel;
@@ -34,6 +35,7 @@ public class Role extends BaseModel<Long> implements org.springframework.securit
 
   @EqualsAndHashCode.Exclude
   @ManyToMany(mappedBy = "roles")
+  @JsonBackReference
   private Set<UserPrincipal> users;
 
   @Override

@@ -19,22 +19,23 @@ import id.msams.webrepo.ctr.abs.JsonApiRequestMapping;
 import id.msams.webrepo.dao.dat.ref.Faculty;
 import id.msams.webrepo.srv.abs.CrudService;
 import id.msams.webrepo.srv.abs.SaveType;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @JsonApiRequestMapping(path = "/faculties")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FacultyCtrl {
 
-  @Autowired
-  private CrudService<Long, Faculty> svc;
+  private final CrudService<Long, Faculty> svc;
 
   @GetMapping
   public ResponseEntity<?> findAll(
-      @SearchSpec(searchParam = "search") Specification<Faculty> spec, Pageable page) {
-    return svc.findAll(spec, page);
+      @SearchSpec(searchParam = "search") Specification<Faculty> spec, Pageable paging) {
+    return svc.findAll(spec, paging);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> findAll(@PathVariable("id") Long id) {
+  public ResponseEntity<?> findById(@PathVariable("id") Long id) {
     return svc.findById(id);
   }
 

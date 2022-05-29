@@ -61,7 +61,7 @@ public class ServiceConf {
   }
 
   @Bean
-  public CrudService<Long, UserPrincipal> userRepoCrudService(UserRepo repo) {
+  public CrudService<Long, UserPrincipal> userCrudService(UserRepo repo) {
     return new CrudServiceImpl<>(selMdlMap, repo, msg);
   }
 

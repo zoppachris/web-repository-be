@@ -53,7 +53,8 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
       Pageable paging) {
     Page<T> page = repo.findAll(paging);
     return ResponseEntity.ok(
-        JsonApiModelBuilder.jsonApiModel().model(
+        JsonApiModelBuilder.jsonApiModel()
+            .model(
             PagedModel.of(
                 page.getContent(),
                 new PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements())))
@@ -63,7 +64,8 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
   @Override
   public ResponseEntity<RepresentationModel<?>> findById(K id) {
     return ResponseEntity.ok(
-        JsonApiModelBuilder.jsonApiModel().model(
+        JsonApiModelBuilder.jsonApiModel()
+            .model(
             repo.findById(id)
                 .orElseThrow(
                     entityNotFound(id)))
@@ -139,7 +141,8 @@ public class CrudServiceImpl<K extends Serializable, T extends BaseModel<K>> imp
         throw new UnsupportedOperationException("Unknown saving strategy");
     }
     return ResponseEntity.ok(
-        JsonApiModelBuilder.jsonApiModel().model(savedData)
+        JsonApiModelBuilder.jsonApiModel()
+            .model(savedData)
             .build());
   }
 

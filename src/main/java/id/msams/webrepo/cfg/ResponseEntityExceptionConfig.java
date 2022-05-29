@@ -48,6 +48,9 @@ public class ResponseEntityExceptionConfig extends ResponseEntityExceptionHandle
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     Object body = null;
 
+    if (ex instanceof UnsupportedOperationException) {
+      status = HttpStatus.BAD_REQUEST;
+    }
     if (ex instanceof UsernameNotFoundException) {
       status = HttpStatus.UNAUTHORIZED;
     }

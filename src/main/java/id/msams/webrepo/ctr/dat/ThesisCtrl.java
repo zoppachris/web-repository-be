@@ -19,26 +19,27 @@ import id.msams.webrepo.ctr.abs.JsonApiRequestMapping;
 import id.msams.webrepo.dao.dat.Thesis;
 import id.msams.webrepo.srv.abs.CrudService;
 import id.msams.webrepo.srv.abs.SaveType;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @JsonApiRequestMapping(path = "/theses")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ThesisCtrl {
 
-  @Autowired
-  private CrudService<Long, Thesis> svc;
+  private final CrudService<Long, Thesis> svc;
 
   @GetMapping
   public ResponseEntity<?> findAll(
-      @SearchSpec(searchParam = "search") Specification<Thesis> spec, Pageable page) {
-    return svc.findAll(spec, page);
+      @SearchSpec(searchParam = "search") Specification<Thesis> spec, Pageable paging) {
+    return svc.findAll(spec, paging);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> findAll(@PathVariable("id") Long id) {
+  public ResponseEntity<?> findById(@PathVariable("id") Long id) {
     return svc.findById(id);
   }
 
-  @PostMapping({ "/", "/{id}" })
+  @PostMapping({ "", "/{id}" })
   public ResponseEntity<?> save(@Nullable @PathVariable("id") Long id,
       @RequestBody Thesis body) {
     return svc.save(id, body, SaveType.UPSERT);
