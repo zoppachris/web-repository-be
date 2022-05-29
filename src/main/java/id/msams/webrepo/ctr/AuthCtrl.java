@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,9 +19,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import id.msams.webrepo.ctr.abs.JsonApiRequestMapping;
 import id.msams.webrepo.dao.sec.Role;
 import id.msams.webrepo.dao.sec.UserPrincipal;
 import id.msams.webrepo.dto.sec.LoginReq;
@@ -28,7 +29,7 @@ import id.msams.webrepo.dto.sec.LoginRes;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/auth")
+@JsonApiRequestMapping("/auth")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthCtrl {
 
@@ -40,7 +41,7 @@ public class AuthCtrl {
   private final JwtEncoder jwtEncoder;
 
   @PostMapping("/login")
-  public ResponseEntity<LoginRes> login(@RequestBody LoginReq body) {
+  public ResponseEntity<EntityModel<LoginRes>> login(@RequestBody LoginReq body) {
     UserPrincipal user = (UserPrincipal) appUserDetailsSrvc.loadUserByUsername(body.getUsername());
     if (!passwordEncoder.matches(body.getPassword(), user.getPassword()))
       throw new UsernameNotFoundException("");
@@ -59,11 +60,14 @@ public class AuthCtrl {
             .claim("scp", user.getRoles().stream().map(Role::getAuthority).collect(Collectors.toSet()))
             .build()));
 
-    return ResponseEntity.ok(LoginRes.builder()
-        .type("Bearer")
-        .accessToken(jwt.getTokenValue())
-        .claims(jwt.getClaims())
-        .build());
+    return ResponseEntity.ok(
+        EntityModel.of(
+            LoginRes.builder()
+                .id(System.currentTimeMillis())
+                .type("Bearer")
+                .accessToken(jwt.getTokenValue())
+                .claims(jwt.getClaims())
+                .build()));
   }
 
 }
