@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import id.msams.webrepo.dao.abs.BaseModel;
 import id.msams.webrepo.dao.dat.ref.Faculty;
 import id.msams.webrepo.dao.sec.UserPrincipal;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
+@JsonApiTypeForClass(value = "lecturer")
 public class Lecturer extends BaseModel<Long> {
 
   @Column(nullable = false)

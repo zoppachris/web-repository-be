@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import id.msams.webrepo.dao.abs.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
+@JsonApiTypeForClass(value = "faculty")
 public class Faculty extends BaseModel<Long> {
 
   @Column(nullable = false)

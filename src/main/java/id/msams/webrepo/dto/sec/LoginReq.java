@@ -1,5 +1,7 @@
 package id.msams.webrepo.dto.sec;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonApiTypeForClass(value = "login-request")
 public class LoginReq {
 
   @Schema(example = "user123")

@@ -6,6 +6,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import id.msams.webrepo.dao.abs.BaseModel;
 import id.msams.webrepo.dao.sec.UserPrincipal;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
+@JsonApiTypeForClass(value = "student")
 public class Student extends BaseModel<Long> {
 
   @Column(nullable = false)

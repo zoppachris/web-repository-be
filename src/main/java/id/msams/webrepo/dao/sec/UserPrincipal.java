@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import org.springframework.security.core.GrantedAuthority;
 
 import id.msams.webrepo.dao.abs.BaseModel;
@@ -29,6 +31,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
+@JsonApiTypeForClass(value = "user")
 public class UserPrincipal extends BaseModel<Long>
     implements org.springframework.security.core.userdetails.UserDetails {
 

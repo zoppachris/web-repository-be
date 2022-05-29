@@ -9,6 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import id.msams.webrepo.dao.abs.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +25,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table
+@JsonApiTypeForClass(value = "role")
 public class Role extends BaseModel<Long> implements org.springframework.security.core.GrantedAuthority {
 
   @Enumerated(EnumType.STRING)
