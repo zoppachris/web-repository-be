@@ -25,9 +25,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: check
-        run: ls
-      - name: copy 1
-        run: scp -i ${GITHUB_WORKSPACE}/.github/ssh/id_rsa.pub -o "StrictHostKeyChecking no" ${GITHUB_WORKSPACE}/target/thesis-webrepo.jar root@103.157.97.165:/home/exe/be/thesis-webrepo.jar
-      - name: copy 2
-        run: scp -i ${GITHUB_WORKSPACE}/.github/ssh/id_rsa.pub -o "StrictHostKeyChecking no" ${GITHUB_WORKSPACE}/target/thesis-webrepo.jar.original root@103.157.97.165:/home/exe/be/thesis-webrepo.jar.original
+    - uses: actions/checkout@master
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@master
+      with:
+        host: 103.157.97.165
+        username: root
+        password: repository123
+        source: "./target/thesis-webrepo.jar"
+        target: "/home/exe/be/thesis-webrepo.jar"
