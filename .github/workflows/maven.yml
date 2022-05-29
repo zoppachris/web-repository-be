@@ -24,6 +24,7 @@ jobs:
       run: mvn -B package --file pom.xml
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - uses: actions/checkout@master
     - name: copy file via ssh password
