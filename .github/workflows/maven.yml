@@ -16,7 +16,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build project
-      run: mvn -B package --file pom.xml
+      run: mvn package -DskipTests
     - name: Save artifact
       uses: actions/upload-artifact@v3.1.0
       with:
