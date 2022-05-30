@@ -31,4 +31,21 @@ jobs:
       uses: actions/download-artifact@v3.0.0
       with:
         name: executable
-        path: /artifact/executable
+        path: ./artifact/executable
+    - name: Upload artifact to remote
+      uses: appleboy/scp-action@master
+      with:
+        host: 103.157.97.165
+        username: root
+        source: "./artifact/executable"
+        target: "/home/exec/be"
+        rm: true
+        overwrite: true
+        key: |
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+          QyNTUxOQAAACDRlCCWBsPnoX6W5wdnCQKfl7SgAct7D939xPPDJ144lQAAAJBielSxYnpU
+          sQAAAAtzc2gtZWQyNTUxOQAAACDRlCCWBsPnoX6W5wdnCQKfl7SgAct7D939xPPDJ144lQ
+          AAAEC3PuUbORaDvJ57EZ1INEz+zMWV0/ZMoKeLwG37u9va9NGUIJYGw+ehfpbnB2cJAp+X
+          tKABy3sP3f3E88MnXjiVAAAADUNJL0NEIFNTSCBLZXk=
+          -----END OPENSSH PRIVATE KEY-----
