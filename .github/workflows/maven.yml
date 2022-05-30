@@ -32,11 +32,18 @@ jobs:
       with:
         name: executable
         path: ./artifact/executable
-    - name: Copy folder content recursively to remote
+    - name: Upload artifact to remote
       uses: garygrossgarten/github-action-scp@release
       with:
         local: ./artifact/executable
-        remote: /home/exec/be
+        remote: /home/be
+        host: 103.157.97.165
+        username: root
+        password: repository123
+    - name: Run executable
+      uses: garygrossgarten/github-action-ssh@release
+      with:
+        command: service thesis-webrepo restart
         host: 103.157.97.165
         username: root
         password: repository123
