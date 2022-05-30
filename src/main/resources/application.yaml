@@ -19,27 +19,27 @@ spring:
     console:
       enabled: false
 
-# --- # PostgreSQL
-# spring:
-#   jpa:
-#     hibernate:
-#       ddl-auto: validate
-#   ## Datasource
-#   datasource:
-#     url: jdbc:postgresql://localhost:5432/webrepo
-#     username: 's53kr_lm8a6r'
-#     password: '$p@s5w0rD_s53k12x'
-
---- # H2 In-Memory
+--- # PostgreSQL
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
   ## Datasource
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: 's53kr_lm8a6r'
-    password: '$p@s5w0rD_s53k12x'
+    url: jdbc:postgresql://localhost:5432/webrepo
+    username: 'admin_pgsql'
+    password: 'admin_pgsql'
+
+# --- # H2 In-Memory
+# spring:
+#   jpa:
+#     hibernate:
+#       ddl-auto: create-drop
+#   ## Datasource
+#   datasource:
+#     url: jdbc:h2:mem:testdb
+#     username: 'admin'
+#     password: 'admin'
 
 #-----------------------------------
 --- # Security
@@ -62,8 +62,8 @@ application:
 application:
   minio:
     url: http://127.0.0.1:9000
-    username: s53kr_lm8a6r
-    password: $p@s5w0rD_s53k12x
+    username: admin_minio
+    password: admin_minio
     get-error-message: SYSTEM.ERROR.STORAGE.DOWNLOAD-FAILURE.DETAIL
     post-error-message: SYSTEM.ERROR.STORAGE.UPLOAD-FAILURE.DETAIL
 spring:
