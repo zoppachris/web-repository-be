@@ -45,7 +45,7 @@ jobs:
       with:
         command: |
           chmod 500 /home/be/thesis-webrepo.jar
-          service thesis-webrepo restart
+          service thesis-webrepo-be restart
         host: 103.157.97.165
         username: root
         password: repository123
