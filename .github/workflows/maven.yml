@@ -23,3 +23,12 @@ jobs:
         name: executable
         path: ./target/*.jar
         if-no-files-found: error
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+    - name: Get artifact
+      uses: actions/download-artifact@v3.0.0
+      with:
+        name: executable
+        path: /artifact/executable
