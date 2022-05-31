@@ -68,12 +68,14 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     http
       .authorizeRequests()
         //*
-        // system admin dan super admin boleh akses segalanya
-        .antMatchers("/**").hasAnyRole(SYSTEM_ADMIN_ROLE_NAME, RoleType.SUPER_ADMIN.roleName())
         // login bisa diakses semuanya
         .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
         // get untuk thesis, faculty, dan major, bisa diakses semuanya
         .antMatchers(HttpMethod.GET, "/theses/**", "/faculties/**", "/majors/**").permitAll()
+        // api explorer dibolehin untuk semua orang
+        .antMatchers("/oas/**", "/swagger/**", "/swagger-ui/**", "/explorer/**").permitAll()
+        // system admin dan super admin boleh akses segalanya
+        .antMatchers("/**").hasAnyRole(SYSTEM_ADMIN_ROLE_NAME, RoleType.SUPER_ADMIN.roleName())
         // admin punya akses penuh untuk manipulasi user, faculty, sama major
         .antMatchers("/users/**", "/faculties/**", "/majors/**").hasRole(RoleType.ADMIN.roleName())
         // student punya akses untuk ngebuat dan ngedit thesis
@@ -81,8 +83,6 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.PUT, "/theses/**").hasRole(RoleType.STUDENT.roleName())
         // lecturer punya akses penuh untuk thesis
         .antMatchers("/theses/**").hasRole(RoleType.LECTURER.roleName())
-        // api explorer dibolehin untuk semua orang
-        .antMatchers("/oas/**", "/swagger/**", "/explorer/**").permitAll()
         // sisanya, bisa diakses asalkan udah login
         .anyRequest().authenticated()
         /*/
