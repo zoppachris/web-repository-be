@@ -80,7 +80,10 @@ public class LoginService {
         response.setUsername(dto.getUsername());
         response.setRoleName(roleUser.getRole().getRoleName());
         lecturers.ifPresent(value -> response.setFacultyName(value.getFaculties().getFacultyName()));
-        students.ifPresent(value -> response.setMajorName(value.getMajors().getMajorName()));
+        if (students.isPresent()){
+            response.setMajorName(students.get().getMajors().getMajorName());
+            response.setFacultyName(students.get().getMajors().getFaculties().getFacultyName());
+        }
         return response;
     }
 
