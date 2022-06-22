@@ -12,8 +12,10 @@ import id.wg.webrepo.utils.Constants;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -36,6 +38,9 @@ public class StudentsService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Optional<PagingDto> findAll(Pageable pageable, String search, String jurusan) {
         return Optional.of(repository.findAll(pageable, search, jurusan))
@@ -87,6 +92,9 @@ public class StudentsService {
             user.setStatus(dto.isStatus());
             user.setUserName(dto.getNim());
             user.setName(dto.getStudentName());
+            if (!StringUtils.isEmpty(dto.getPassword())){
+                user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            }
 
             students.setStudentName(dto.getStudentName());
             students.setNim(dto.getNim());

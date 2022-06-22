@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -82,7 +83,9 @@ public class UsersService {
         if (id != null){
             user = findById(id);
             user.setName(dto.getName());
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            if (!StringUtils.isEmpty(dto.getPassword())){
+                user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            }
             user.setStatus(dto.isStatus());
             repository.save(user);
         } else{
