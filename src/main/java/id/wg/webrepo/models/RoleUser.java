@@ -26,5 +26,5 @@ public class RoleUser extends BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    private Roles role;
+    private Roles roles;
 }

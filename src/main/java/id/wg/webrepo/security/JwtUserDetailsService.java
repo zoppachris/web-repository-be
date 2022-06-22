@@ -31,7 +31,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         RoleUser roleUser = roleUserRepository.findByUsers(users);
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.
-                commaSeparatedStringToAuthorityList("ROLE_"+roleUser.getRole().getRoleName());
+                commaSeparatedStringToAuthorityList("ROLE_"+roleUser.getRoles().getRoleName());
 
         return new org.springframework.security.core.userdetails.User(
                 users.getUserName(),

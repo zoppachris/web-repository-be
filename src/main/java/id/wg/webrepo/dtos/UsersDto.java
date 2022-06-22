@@ -14,5 +14,6 @@ public class UsersDto extends BaseModelDto {
     public String userName;
     public String name;
     public String password;
+    public String roleName;
     public boolean status;
 }

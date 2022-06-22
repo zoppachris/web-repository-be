@@ -65,7 +65,7 @@ public class ApplicationConfiguration {
 
             RoleUser roleUser = RoleUser.builder()
                     .users(superAdmin)
-                    .role(superAdminRole)
+                    .roles(superAdminRole)
                     .build();
 
             usersRepository.save(superAdmin);

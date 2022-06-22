@@ -10,9 +10,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Long> {
     @Query("SELECT u FROM Users u " +
-            "WHERE (LOWER(u.name) LIKE LOWER(CONCAT('%',:search,'%')) " +
-            "OR LOWER(u.userName) LIKE LOWER(CONCAT('%',:search,'%')))")
-    Page<Users> findAll(Pageable pageable, String search);
+            "JOIN RoleUser ru ON u.userId = ru.users.userId " +
+            "WHERE ((LOWER(u.name) LIKE LOWER(CONCAT('%',:search,'%')) " +
+            "OR LOWER(u.userName) LIKE LOWER(CONCAT('%',:search,'%'))) " +
+            "AND LOWER(ru.roles.roleName) = LOWER(:roles))")
+    Page<Users> findAll(Pageable pageable, String search, String roles);
 
     @Query("SELECT u FROM Users u " +
             "WHERE userName = :userName ")

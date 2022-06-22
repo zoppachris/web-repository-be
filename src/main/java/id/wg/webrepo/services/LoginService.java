@@ -78,7 +78,7 @@ public class LoginService {
         response.setUserId(users.getUserId());
         response.setName(users.getName());
         response.setUsername(dto.getUsername());
-        response.setRoleName(roleUser.getRole().getRoleName());
+        response.setRoleName(roleUser.getRoles().getRoleName());
         lecturers.ifPresent(value -> response.setFacultyName(value.getFaculties().getFacultyName()));
         if (students.isPresent()){
             response.setMajorName(students.get().getMajors().getMajorName());

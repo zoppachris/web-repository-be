@@ -35,8 +35,8 @@ public class UsersService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Optional<PagingDto> findAll(Pageable pageable, String search) {
-        return Optional.of(repository.findAll(pageable, search))
+    public Optional<PagingDto> findAll(Pageable pageable, String search, String roles) {
+        return Optional.of(repository.findAll(pageable, search, roles))
                 .map(pages -> PagingDto.builder()
                         .maxPage(pages.getTotalPages() == 0 ? 0 : pages.getTotalPages() - 1)
                         .page(pageable.getPageNumber())
@@ -54,6 +54,7 @@ public class UsersService {
                         .name(u.getName())
                         .password(null)
                         .status(u.status)
+                        .roleName(findRoleName(u))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -66,6 +67,13 @@ public class UsersService {
             user.setPassword(null);
         }
         return user;
+    }
+
+    public UsersDto getById(Long id) {
+        Users users = findById(id);
+        UsersDto dto = modelMapper.map(users, UsersDto.class);
+        dto.setRoleName(findRoleName(users));
+        return dto;
     }
 
     @Transactional
@@ -94,7 +102,7 @@ public class UsersService {
 
         RoleUser roleUser = new RoleUser();
         roleUser.setUsers(user);
-        roleUser.setRole(role);
+        roleUser.setRoles(role);
 
         roleUserRepository.setSequence();
         roleUserRepository.save(roleUser);
@@ -103,5 +111,10 @@ public class UsersService {
     @Transactional
     public void delete(Long id) {
         repository.delete(findById(id));
+    }
+
+    public String findRoleName(Users users) {
+        RoleUser roleUser = roleUserRepository.findByUsers(users);
+        return roleUser.getRoles().getRoleName();
     }
 }

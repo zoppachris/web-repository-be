@@ -15,13 +15,16 @@ public class UsersController {
     private UsersService service;
 
     @GetMapping()
-    public Response<Object> read(@RequestParam(required = false) Long id, @RequestParam String search, Pageable pageable) {
+    public Response<Object> read(@RequestParam(required = false) Long id,
+                                 @RequestParam String search,
+                                 @RequestParam String roles,
+                                 Pageable pageable) {
         Response<Object> response = new Response<>();
         try {
             if (id != null){
-                response.setSuccess(service.findById(id));
+                response.setSuccess(service.getById(id));
             }else{
-                response.setSuccess(service.findAll(pageable, search));
+                response.setSuccess(service.findAll(pageable, search, roles));
             }
         } catch (Exception e) {
             e.printStackTrace();
