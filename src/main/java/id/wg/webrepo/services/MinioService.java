@@ -54,6 +54,7 @@ public class MinioService {
                  | InvalidResponseException | NoSuchAlgorithmException | XmlParserException | ServerException
                  | IllegalArgumentException | IOException e) {
             log.error(e.getLocalizedMessage(), e);
+            return url;
         }
         return url;
     }

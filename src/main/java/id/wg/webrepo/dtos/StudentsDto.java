@@ -14,7 +14,6 @@ public class StudentsDto extends BaseModelDto {
     public String nim;
     public String year;
     private MajorsDto majors;
-    private UsersDto users;
     private String password;
     private boolean status;
 }

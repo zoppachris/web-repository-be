@@ -60,7 +60,6 @@ public class StudentsService {
                         .studentName(s.getStudentName())
                         .nim(s.getNim())
                         .year(s.getYear())
-                        .users(modelMapper.map(s.getUsers(), UsersDto.class))
                         .majors(modelMapper.map(s.getMajors(), MajorsDto.class))
                         .build())
                 .collect(Collectors.toList());

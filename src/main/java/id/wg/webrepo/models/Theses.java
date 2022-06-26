@@ -35,7 +35,7 @@ public class Theses extends BaseModel {
     @Column(name = "year")
     public String year;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "student_id")
     private Students students;
 }
