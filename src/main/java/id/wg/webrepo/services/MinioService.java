@@ -21,16 +21,16 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class MinioService {
-    @Value("${minio.username}")
+    @Value("${application.minio.username}")
     protected String username;
 
-    @Value("${minio.password}")
+    @Value("${application.minio.password}")
     protected String password;
 
-    @Value("${minio.url}")
+    @Value("${application.minio.url}")
     protected String url;
 
-    @Value("${minio.bucket}")
+    @Value("${application.minio.bucket}")
     protected String bucket;
 
     public MinioClient minio() {
