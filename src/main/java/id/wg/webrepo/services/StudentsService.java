@@ -75,6 +75,7 @@ public class StudentsService {
         if (optional.isPresent()){
             students = optional.get();
         }
+        students.setUsers(null);
         return students;
     }
 

@@ -51,7 +51,8 @@ public class ThesesService {
                         .abstracts(t.getAbstracts())
                         .keywords(t.getKeywords())
                         .year(t.getYear())
-                        .documentUrl(getUrlDocument(t))
+                        .partialDocumentUrl(minioService.getLink(t.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY))
+                        .fullDocumentUrl(getUrlFullDocument(t.getFullDocumentUrl()))
                         .students(modelMapper.map(t.getStudents(), StudentsDto.class))
                         .build())
                 .collect(Collectors.toList());
@@ -61,15 +62,18 @@ public class ThesesService {
         return repository.findAll().size();
     }
 
-    public ThesesDto findById(Long id) {
+    public Theses findById(Long id) {
         Optional<Theses> optional = repository.findById(id);
         Theses theses = new Theses();
         if (optional.isPresent()){
             theses = optional.get();
         }
-        ThesesDto dto = modelMapper.map(theses, ThesesDto.class);
-        dto.setDocumentUrl(getUrlDocument(theses));
-        return dto;
+        theses.setPartialDocumentUrl(minioService.getLink(theses.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY));
+        theses.setFullDocumentUrl(getUrlFullDocument(theses.getFullDocumentUrl()));
+        Students students = theses.getStudents();
+        students.setUsers(null);
+        theses.setStudents(students);
+        return theses;
     }
 
     @Transactional
@@ -101,12 +105,10 @@ public class ThesesService {
         return repository.findByStudents(students);
     }
 
-    public String getUrlDocument(Theses theses){
-        String url;
+    public String getUrlFullDocument(String document){
+        String url = "";
         if (UserSessionUtil.getUsername() != null){
-            url = minioService.getLink(theses.getFullDocumentUrl(), Constants.DEFAULT_EXPIRY);
-        } else{
-            url = minioService.getLink(theses.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY);
+            url = minioService.getLink(document, Constants.DEFAULT_EXPIRY);
         }
         return url;
     }

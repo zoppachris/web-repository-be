@@ -15,7 +15,7 @@ public class ThesesController {
 
     @GetMapping()
     public Response<Object> read(@RequestParam(required = false) Long id, @RequestParam String search,
-                                 @RequestParam String jurusan,  @RequestParam String year, Pageable pageable) {
+                                 @RequestParam String jurusan, @RequestParam String year, Pageable pageable) {
         Response<Object> response = new Response<>();
         try {
             if (id != null){

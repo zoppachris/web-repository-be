@@ -34,9 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder);
     }
 
@@ -48,9 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // We don't need CSRF for this example
-        httpSecurity.csrf().disable().authorizeRequests()
-                // dont authenticate this particular request
+        httpSecurity
+                .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/change-password").permitAll()
                 .antMatchers("/api/homepage").permitAll()
@@ -58,7 +54,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/theses").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/majors").permitAll()
                 .antMatchers("/api/oas/**", "/api/swagger/**", "/api/swagger-ui/**", "/api/explorer/**").permitAll()
-                // has role authenticate method
                 .antMatchers("/api/faculties/**").hasAnyRole(Constants.SUPERADMIN, Constants.ADMIN)
                 .antMatchers(HttpMethod.POST, "/api/majors/**").hasAnyRole(Constants.SUPERADMIN, Constants.ADMIN)
                 .antMatchers(HttpMethod.PUT, "/api/majors/**").hasAnyRole(Constants.SUPERADMIN, Constants.ADMIN)
@@ -70,16 +65,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/api/theses/**").hasAnyRole(Constants.SUPERADMIN, Constants.ADMIN)
                 .antMatchers("/api/upload/**").hasAnyRole(Constants.SUPERADMIN, Constants.ADMIN)
                 .antMatchers("/api/users/**").hasRole(Constants.SUPERADMIN)
-                // all other requests need to be authenticated
                 .anyRequest().authenticated()
-                // make sure we use stateless session; session won't be used to
-                // store user's state.
                 .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .cors().and()
+                .csrf().disable();
 
-        // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        httpSecurity
+                .httpBasic()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }

@@ -33,6 +33,9 @@ public class MinioService {
     @Value("${application.minio.bucket}")
     protected String bucket;
 
+    @Value("${application.minio.public.url}")
+    protected String publicUrl;
+
     public MinioClient minio() {
         return MinioClient.builder()
                 .endpoint(url)
@@ -50,6 +53,7 @@ public class MinioService {
                             .object(filename)
                             .expiry(Math.toIntExact(expiry), TimeUnit.SECONDS)
                             .build());
+            url = url.replace(this.url, publicUrl);
         } catch (InvalidKeyException | ErrorResponseException | InsufficientDataException | InternalException
                  | InvalidResponseException | NoSuchAlgorithmException | XmlParserException | ServerException
                  | IllegalArgumentException | IOException e) {
