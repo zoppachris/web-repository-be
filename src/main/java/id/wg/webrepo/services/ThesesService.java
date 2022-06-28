@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -51,8 +52,10 @@ public class ThesesService {
                         .abstracts(t.getAbstracts())
                         .keywords(t.getKeywords())
                         .year(t.getYear())
-                        .partialDocumentUrl(minioService.getLink(t.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY))
-                        .fullDocumentUrl(getUrlFullDocument(t.getFullDocumentUrl()))
+                        .partialDocumentPath(minioService.getLink(t.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY))
+                        .fullDocumentPath(getUrlFullDocument(t.getFullDocumentUrl()))
+                        .partialDocumentUrl(t.getPartialDocumentUrl())
+                        .fullDocumentUrl(t.getFullDocumentUrl())
                         .students(modelMapper.map(t.getStudents(), StudentsDto.class))
                         .build())
                 .collect(Collectors.toList());
@@ -62,18 +65,26 @@ public class ThesesService {
         return repository.findAll().size();
     }
 
-    public Theses findById(Long id) {
+    public ThesesDto findById(Long id) {
         Optional<Theses> optional = repository.findById(id);
         Theses theses = new Theses();
         if (optional.isPresent()){
             theses = optional.get();
         }
-        theses.setPartialDocumentUrl(minioService.getLink(theses.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY));
-        theses.setFullDocumentUrl(getUrlFullDocument(theses.getFullDocumentUrl()));
-        Students students = theses.getStudents();
-        students.setUsers(null);
-        theses.setStudents(students);
-        return theses;
+
+        StudentsDto studentsDto = modelMapper.map(theses.getStudents(), StudentsDto.class);
+        ThesesDto dto = new ThesesDto();
+        dto.setThesesId(theses.getThesesId());
+        dto.setThesesTitle(theses.getThesesTitle());
+        dto.setAbstracts(theses.getAbstracts());
+        dto.setKeywords(theses.getKeywords());
+        dto.setYear(theses.getYear());
+        dto.setStudents(studentsDto);
+        dto.setFullDocumentUrl(theses.getFullDocumentUrl());
+        dto.setPartialDocumentUrl(theses.partialDocumentUrl);
+        dto.setPartialDocumentPath(minioService.getLink(theses.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY));
+        dto.setFullDocumentPath(getUrlFullDocument(theses.getFullDocumentUrl()));
+        return dto;
     }
 
     @Transactional
@@ -85,8 +96,12 @@ public class ThesesService {
             theses.setAbstracts(dto.getAbstracts());
             theses.setKeywords(dto.getKeywords());
             theses.setYear(dto.getYear());
-            theses.setPartialDocumentUrl(dto.getPartialDocumentUrl());
-            theses.setFullDocumentUrl(dto.getFullDocumentUrl());
+            if (!StringUtils.isEmpty(dto.getPartialDocumentUrl())){
+                theses.setPartialDocumentUrl(dto.getPartialDocumentUrl());
+            }
+            if (!StringUtils.isEmpty(dto.getFullDocumentUrl())){
+                theses.setFullDocumentUrl(dto.getFullDocumentUrl());
+            }
             theses.setStudents(studentsService.findById(dto.getStudents().getStudentId()));
         } else{
             theses = modelMapper.map(dto, Theses.class);
