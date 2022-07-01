@@ -9,5 +9,5 @@ import lombok.*;
 public class MajorsDto extends BaseModelDto {
     public Long majorId;
     public String majorName;
-    private FacultiesDto faculties;
+    public FacultiesDto faculties;
 }

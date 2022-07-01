@@ -12,8 +12,8 @@ public class LecturersDto extends BaseModelDto {
     public Long lectureId;
     public String lectureName;
     public String nidn;
-    private FacultiesDto faculties;
-    private UsersDto users;
-    private String password;
-    private boolean status;
+    public FacultiesDto faculties;
+    public UsersDto users;
+    public String password;
+    public boolean status;
 }

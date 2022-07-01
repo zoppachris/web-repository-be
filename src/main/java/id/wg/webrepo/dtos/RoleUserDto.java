@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 public class RoleUserDto extends BaseModelDto {
     public Long roleUserId;
-    private UsersDto user;
-    private RolesDto role;
+    public UsersDto user;
+    public RolesDto role;
 }

@@ -61,6 +61,7 @@ public class StudentsService {
                         .nim(s.getNim())
                         .year(s.getYear())
                         .majors(modelMapper.map(s.getMajors(), MajorsDto.class))
+                        .users(modelMapper.map(s.getUsers(), UsersDto.class))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -75,7 +76,6 @@ public class StudentsService {
         if (optional.isPresent()){
             students = optional.get();
         }
-        students.setUsers(null);
         return students;
     }
 
