@@ -12,6 +12,4 @@ public final class Constants {
     public static final long ADMIN_ID = 2;
     public static final long LECTURER_ID = 3;
     public static final long STUDENT_ID = 4;
-
-    public static final long DEFAULT_EXPIRY = 6000;
 }

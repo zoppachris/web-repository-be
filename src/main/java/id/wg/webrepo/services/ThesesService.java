@@ -7,7 +7,6 @@ import id.wg.webrepo.models.Students;
 import id.wg.webrepo.models.Theses;
 import id.wg.webrepo.repositories.ThesesRepository;
 import id.wg.webrepo.security.UserSessionUtil;
-import id.wg.webrepo.utils.Constants;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +51,7 @@ public class ThesesService {
                         .abstracts(t.getAbstracts())
                         .keywords(t.getKeywords())
                         .year(t.getYear())
-                        .partialDocumentPath(minioService.getLink(t.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY))
+                        .partialDocumentPath(minioService.getLink(t.getPartialDocumentUrl()))
                         .fullDocumentPath(getUrlFullDocument(t.getFullDocumentUrl()))
                         .partialDocumentUrl(t.getPartialDocumentUrl())
                         .fullDocumentUrl(t.getFullDocumentUrl())
@@ -82,7 +81,7 @@ public class ThesesService {
         dto.setStudents(studentsDto);
         dto.setFullDocumentUrl(theses.getFullDocumentUrl());
         dto.setPartialDocumentUrl(theses.partialDocumentUrl);
-        dto.setPartialDocumentPath(minioService.getLink(theses.getPartialDocumentUrl(), Constants.DEFAULT_EXPIRY));
+        dto.setPartialDocumentPath(minioService.getLink(theses.getPartialDocumentUrl()));
         dto.setFullDocumentPath(getUrlFullDocument(theses.getFullDocumentUrl()));
         return dto;
     }
@@ -123,7 +122,7 @@ public class ThesesService {
     public String getUrlFullDocument(String document){
         String url = "";
         if (UserSessionUtil.getUsername() != null){
-            url = minioService.getLink(document, Constants.DEFAULT_EXPIRY);
+            url = minioService.getLink(document);
         }
         return url;
     }

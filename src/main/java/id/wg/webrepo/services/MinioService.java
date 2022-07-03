@@ -13,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -33,9 +31,6 @@ public class MinioService {
     @Value("${application.minio.bucket}")
     protected String bucket;
 
-    @Value("${application.minio.public.url}")
-    protected String publicUrl;
-
     public MinioClient minio() {
         return MinioClient.builder()
                 .endpoint(url)
@@ -43,17 +38,16 @@ public class MinioService {
                 .build();
     }
 
-    public String getLink(String filename, Long expiry) {
+    public String getLink(String filename) {
         String url = "";
         try {
             url = minio().getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
-                            .bucket(bucket)
-                            .object(filename)
-                            .expiry(Math.toIntExact(expiry), TimeUnit.SECONDS)
-                            .build());
-            url = url.replace(this.url, publicUrl);
+                            GetPresignedObjectUrlArgs.builder()
+                                    .method(Method.GET)
+                                    .bucket(bucket)
+                                    .object(filename)
+                                    .expiry(2, TimeUnit.HOURS)
+                                    .build());
         } catch (InvalidKeyException | ErrorResponseException | InsufficientDataException | InternalException
                  | InvalidResponseException | NoSuchAlgorithmException | XmlParserException | ServerException
                  | IllegalArgumentException | IOException e) {
