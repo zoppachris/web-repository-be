@@ -7,6 +7,7 @@ import id.wg.webrepo.models.Students;
 import id.wg.webrepo.models.Theses;
 import id.wg.webrepo.repositories.ThesesRepository;
 import id.wg.webrepo.security.UserSessionUtil;
+import io.minio.errors.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -110,8 +114,10 @@ public class ThesesService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         Theses theses = repository.findById(id).get();
+        minioService.delete(theses.getPartialDocumentUrl());
+        minioService.delete(theses.getFullDocumentUrl());
         repository.delete(theses);
     }
 
