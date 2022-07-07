@@ -31,8 +31,6 @@ public class MinioService {
     @Value("${application.minio.bucket}")
     protected String bucket;
 
-    private String urlDownload = "https://minio.unnur-repository.com";
-
     public MinioClient minio() {
         return MinioClient.builder()
                 .endpoint(url)
@@ -41,6 +39,7 @@ public class MinioService {
     }
 
     public String getLink(String filename) {
+        String urlDownload = "https://api-minio.unnur-repository.com";
         String url = "";
         try {
             url = minio().getPresignedObjectUrl(
