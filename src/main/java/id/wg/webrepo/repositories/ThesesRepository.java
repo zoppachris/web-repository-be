@@ -12,10 +12,13 @@ import java.util.List;
 
 @Repository
 public interface ThesesRepository extends JpaRepository<Theses, Long> {
+
     @Query("SELECT t FROM Theses t " +
             "JOIN Students s ON t.students.studentId = s.studentId " +
             "JOIN Majors m ON s.majors.majorId = m.majorId " +
-            "WHERE (LOWER(t.thesesTitle) LIKE LOWER(CONCAT('%',:search,'%')) " +
+            "WHERE ((LOWER(t.thesesTitle) LIKE LOWER(CONCAT('%',:search,'%')) " +
+            "OR LOWER(t.abstracts) LIKE LOWER(CONCAT('%',:search,'%')) " +
+            "OR LOWER(t.keywords) LIKE LOWER(CONCAT('%',:search,'%'))) " +
             "AND LOWER(t.year) LIKE LOWER(CONCAT('%',:year,'%')) " +
             "AND LOWER(m.majorName) LIKE LOWER(CONCAT('%',:jurusan,'%')))")
     Page<Theses> findAll(Pageable pageable, String search, String year, String jurusan);
