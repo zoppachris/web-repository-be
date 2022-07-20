@@ -60,18 +60,8 @@ public class UsersService {
                 .collect(Collectors.toList());
     }
 
-    public Users findById(Long id) {
-        Optional<Users> optional = repository.findById(id);
-        Users user = new Users();
-        if (optional.isPresent()){
-            user = optional.get();
-            user.setPassword(null);
-        }
-        return user;
-    }
-
-    public UsersDto getById(Long id) {
-        Users users = findById(id);
+    public UsersDto findById(Long id) {
+        Users users = repository.findById(id).get();
         UsersDto dto = modelMapper.map(users, UsersDto.class);
         dto.setRoleName(findRoleName(users));
         return dto;
@@ -81,11 +71,12 @@ public class UsersService {
     public Users save(UsersDto dto, Long id, String name) {
         Users user;
         if (id != null){
-            user = findById(id);
+            user = repository.findById(id).get();
             user.setName(dto.getName());
             if (!StringUtils.isEmpty(dto.getPassword())){
                 user.setPassword(passwordEncoder.encode(dto.getPassword()));
             }
+            user.setUserName(dto.getUserName());
             user.setStatus(dto.isStatus());
             repository.save(user);
         } else{
@@ -113,7 +104,8 @@ public class UsersService {
 
     @Transactional
     public void delete(Long id) {
-        repository.delete(findById(id));
+        Users user = repository.findById(id).get();
+        repository.delete(user);
     }
 
     public String findRoleName(Users users) {

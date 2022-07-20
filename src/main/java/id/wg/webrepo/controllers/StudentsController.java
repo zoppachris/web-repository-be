@@ -58,8 +58,11 @@ public class StudentsController {
     public Response<Object> delete(@PathVariable Long id) {
         Response<Object> response = new Response<>();
         try {
-            service.delete(id);
-            response.setSuccess("Student successfully deleted");
+            if (service.delete(id)){
+                response.setSuccess("Student successfully deleted");
+            }else{
+                response.setError("Failed to delete student");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             response.setError("Failed to delete student");

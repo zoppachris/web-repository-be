@@ -22,7 +22,7 @@ public class UsersController {
         Response<Object> response = new Response<>();
         try {
             if (id != null){
-                response.setSuccess(service.getById(id));
+                response.setSuccess(service.findById(id));
             }else{
                 response.setSuccess(service.findAll(pageable, search, roles));
             }

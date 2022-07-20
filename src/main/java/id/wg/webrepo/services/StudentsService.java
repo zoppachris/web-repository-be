@@ -87,7 +87,7 @@ public class StudentsService {
     public Students save(StudentsDto dto, Long id) {
         Students students;
         if (id != null){
-            students = findById(id);
+            students = repository.findById(id).get();
             Users user = students.getUsers();
             user.setStatus(dto.isStatus());
             user.setUserName(dto.getNim());
@@ -117,7 +117,7 @@ public class StudentsService {
 
     @Transactional
     public boolean delete(Long id) {
-        Students students = findById(id);
+        Students students = repository.findById(id).get();
         if (CollectionUtils.isEmpty(thesesService.findByStudents(students))){
             usersService.delete(students.getUsers().getUserId());
             return true;

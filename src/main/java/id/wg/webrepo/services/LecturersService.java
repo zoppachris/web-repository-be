@@ -82,7 +82,7 @@ public class LecturersService {
     public Lecturers save(LecturersDto dto, Long id) {
         Lecturers lecturers;
         if (id != null){
-            lecturers = findById(id);
+            lecturers = repository.findById(id).get();
             Users user = lecturers.getUsers();
             user.setStatus(dto.isStatus());
             user.setUserName(dto.getNidn());
@@ -111,6 +111,7 @@ public class LecturersService {
 
     @Transactional
     public void delete(Long id) {
-        repository.delete(findById(id));
+        Lecturers lecturers = repository.findById(id).get();
+        repository.delete(lecturers);
     }
 }

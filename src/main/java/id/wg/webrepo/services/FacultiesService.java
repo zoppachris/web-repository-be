@@ -62,7 +62,7 @@ public class FacultiesService {
     public Faculties save(FacultiesDto dto, Long id) {
         Faculties faculties;
         if (id != null){
-            faculties = findById(id);
+            faculties = repository.findById(id).get();
             faculties.setFacultyName(dto.getFacultyName());
         } else{
             faculties = modelMapper.map(dto, Faculties.class);
@@ -73,7 +73,7 @@ public class FacultiesService {
 
     @Transactional
     public boolean delete(Long id) {
-        Faculties faculties = findById(id);
+        Faculties faculties = repository.findById(id).get();
         if (CollectionUtils.isEmpty(majorsService.findByFaculties(faculties)) &&
                 CollectionUtils.isEmpty(lecturersService.findByFaculties(faculties))){
             repository.delete(faculties);

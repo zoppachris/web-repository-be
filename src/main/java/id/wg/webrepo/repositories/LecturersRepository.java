@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface LecturersRepository extends JpaRepository<Lecturers, Long> {
     @Query("SELECT l FROM Lecturers l " +
             "WHERE (LOWER(l.lectureName) LIKE LOWER(CONCAT('%',:search,'%')) " +
-            "AND LOWER(l.nidn) LIKE LOWER(CONCAT('%',:search,'%')))")
+            "OR LOWER(l.nidn) LIKE LOWER(CONCAT('%',:search,'%')))")
     Page<Lecturers> findAll(Pageable pageable, String search);
 
     @Query("SELECT l FROM Lecturers l WHERE l.faculties = :faculties")
