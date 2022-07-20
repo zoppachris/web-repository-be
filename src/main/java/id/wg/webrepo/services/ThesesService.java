@@ -56,7 +56,7 @@ public class ThesesService {
                         .keywords(t.getKeywords())
                         .year(t.getYear())
                         .partialDocumentUrl(t.getPartialDocumentUrl())
-                        .fullDocumentUrl(t.getFullDocumentUrl())
+                        .fullDocumentUrl(getUrlDocument(t.getFullDocumentUrl()))
                         .students(modelMapper.map(t.getStudents(), StudentsDto.class))
                         .build())
                 .collect(Collectors.toList());
@@ -81,8 +81,8 @@ public class ThesesService {
         dto.setKeywords(theses.getKeywords());
         dto.setYear(theses.getYear());
         dto.setStudents(studentsDto);
-        dto.setFullDocumentUrl(theses.getFullDocumentUrl());
-        dto.setPartialDocumentUrl(theses.partialDocumentUrl);
+        dto.setFullDocumentUrl(getUrlDocument(theses.getFullDocumentUrl()));
+        dto.setPartialDocumentUrl(theses.getPartialDocumentUrl());
         return dto;
     }
 
@@ -121,4 +121,11 @@ public class ThesesService {
         return repository.findByStudents(students);
     }
 
+    public String getUrlDocument(String path){
+        if (UserSessionUtil.getUsername() != null){
+            return path;
+        } else {
+            return "";
+        }
+    }
 }

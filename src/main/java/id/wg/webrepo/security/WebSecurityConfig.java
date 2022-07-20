@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/change-password").permitAll()
                 .antMatchers("/api/homepage").permitAll()
                 .antMatchers("/api/majors/lov").permitAll()
+                .antMatchers("/api/download").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/theses").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/majors").permitAll()
                 .antMatchers("/api/oas/**", "/api/swagger/**", "/api/swagger-ui/**", "/api/explorer/**").permitAll()
