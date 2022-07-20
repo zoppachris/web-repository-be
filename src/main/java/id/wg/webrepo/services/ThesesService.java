@@ -55,8 +55,6 @@ public class ThesesService {
                         .abstracts(t.getAbstracts())
                         .keywords(t.getKeywords())
                         .year(t.getYear())
-                        .partialDocumentPath(minioService.getLink(t.getPartialDocumentUrl()))
-                        .fullDocumentPath(getUrlFullDocument(t.getFullDocumentUrl()))
                         .partialDocumentUrl(t.getPartialDocumentUrl())
                         .fullDocumentUrl(t.getFullDocumentUrl())
                         .students(modelMapper.map(t.getStudents(), StudentsDto.class))
@@ -85,8 +83,6 @@ public class ThesesService {
         dto.setStudents(studentsDto);
         dto.setFullDocumentUrl(theses.getFullDocumentUrl());
         dto.setPartialDocumentUrl(theses.partialDocumentUrl);
-        dto.setPartialDocumentPath(minioService.getLink(theses.getPartialDocumentUrl()));
-        dto.setFullDocumentPath(getUrlFullDocument(theses.getFullDocumentUrl()));
         return dto;
     }
 
@@ -125,11 +121,4 @@ public class ThesesService {
         return repository.findByStudents(students);
     }
 
-    public String getUrlFullDocument(String document){
-        String url = "";
-        if (UserSessionUtil.getUsername() != null){
-            url = minioService.getLink(document);
-        }
-        return url;
-    }
 }

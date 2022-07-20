@@ -6,11 +6,13 @@ import io.minio.http.Method;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -38,8 +40,25 @@ public class MinioService {
                 .build();
     }
 
+    public byte[] getFile(String filename) {
+        try {
+
+            InputStream stream = minio().getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(filename)
+                            .build());
+
+            byte[] content = IOUtils.toByteArray(stream);
+            stream.close();
+            return content;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public String getLink(String filename) {
-        String urlDownload = "https://api-minio.unnur-repository.com";
         String url = "";
         try {
             url = minio().getPresignedObjectUrl(
@@ -49,7 +68,6 @@ public class MinioService {
                                     .object(filename)
                                     .expiry(2, TimeUnit.HOURS)
                                     .build());
-            url = url.replace(this.url, urlDownload);
         } catch (InvalidKeyException | ErrorResponseException | InsufficientDataException | InternalException
                  | InvalidResponseException | NoSuchAlgorithmException | XmlParserException | ServerException
                  | IllegalArgumentException | IOException e) {
