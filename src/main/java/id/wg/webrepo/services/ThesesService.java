@@ -2,9 +2,11 @@ package id.wg.webrepo.services;
 
 import id.wg.webrepo.dtos.PagingDto;
 import id.wg.webrepo.dtos.StudentsDto;
+import id.wg.webrepo.dtos.StudentsReadOnlyDto;
 import id.wg.webrepo.dtos.ThesesDto;
 import id.wg.webrepo.models.Students;
 import id.wg.webrepo.models.Theses;
+import id.wg.webrepo.repositories.StudentsRepository;
 import id.wg.webrepo.repositories.ThesesRepository;
 import id.wg.webrepo.security.UserSessionUtil;
 import io.minio.errors.*;
@@ -29,6 +31,9 @@ public class ThesesService {
 
     @Autowired
     private StudentsService studentsService;
+
+    @Autowired
+    private StudentsRepository studentsRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -57,7 +62,7 @@ public class ThesesService {
                         .year(t.getYear())
                         .partialDocumentUrl(t.getPartialDocumentUrl())
                         .fullDocumentUrl(getUrlDocument(t.getFullDocumentUrl()))
-                        .students(modelMapper.map(t.getStudents(), StudentsDto.class))
+                        .students(modelMapper.map(studentsService.findByTheses(t), StudentsReadOnlyDto.class))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -73,7 +78,7 @@ public class ThesesService {
             theses = optional.get();
         }
 
-        StudentsDto studentsDto = modelMapper.map(theses.getStudents(), StudentsDto.class);
+        StudentsReadOnlyDto studentsDto = modelMapper.map(studentsService.findByTheses(theses), StudentsReadOnlyDto.class);
         ThesesDto dto = new ThesesDto();
         dto.setThesesId(theses.getThesesId());
         dto.setThesesTitle(theses.getThesesTitle());
@@ -101,23 +106,33 @@ public class ThesesService {
             if (!StringUtils.isEmpty(dto.getFullDocumentUrl())){
                 theses.setFullDocumentUrl(dto.getFullDocumentUrl());
             }
-            theses.setStudents(studentsService.findById(dto.getStudents().getStudentId()));
+            repository.save(theses);
         } else{
             theses = modelMapper.map(dto, Theses.class);
             repository.setSequence();
+            repository.save(theses);
+
+            Students students = studentsService.findById(dto.getStudents().getStudentId());
+            students.setTheses(theses);
+            studentsRepository.save(students);
         }
-        return repository.save(theses);
+        return theses;
     }
 
     @Transactional
     public void delete(Long id) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         Theses theses = repository.findById(id).get();
+
+        Students students = studentsService.findByTheses(theses);
+        students.setTheses(null);
+        studentsRepository.save(students);
+
         minioService.delete(theses.getPartialDocumentUrl());
         minioService.delete(theses.getFullDocumentUrl());
         repository.delete(theses);
     }
 
-    public List<Theses> findByStudents(Students students) {
+    public Theses findByStudents(Students students) {
         return repository.findByStudents(students);
     }
 

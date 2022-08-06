@@ -36,4 +36,8 @@ public class Students extends BaseModel {
     @OneToOne
     @JoinColumn(name = "user_id")
     private Users users;
+
+    @OneToOne
+    @JoinColumn(name = "theses_id")
+    private Theses theses;
 }

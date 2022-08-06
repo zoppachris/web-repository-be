@@ -1,23 +1,25 @@
 package id.wg.webrepo.services;
 
-import id.wg.webrepo.dtos.MajorsDto;
-import id.wg.webrepo.dtos.PagingDto;
-import id.wg.webrepo.dtos.StudentsDto;
-import id.wg.webrepo.dtos.UsersDto;
+import id.wg.webrepo.dtos.*;
 import id.wg.webrepo.models.Majors;
 import id.wg.webrepo.models.Students;
+import id.wg.webrepo.models.Theses;
 import id.wg.webrepo.models.Users;
 import id.wg.webrepo.repositories.StudentsRepository;
 import id.wg.webrepo.utils.Constants;
+import io.minio.errors.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,8 +44,19 @@ public class StudentsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Optional<PagingDto> findAll(Pageable pageable, String search, String jurusan) {
-        return Optional.of(repository.findAll(pageable, search, jurusan))
+    public Optional<PagingDto> findAll(Pageable pageable, String search, String jurusan, Boolean hasTheses) {
+        Page<Students> list;
+        if (hasTheses == null){
+            list = repository.findAll(pageable, search, jurusan);
+        } else{
+            if (hasTheses){
+                list = repository.findHasTheses(pageable, search, jurusan);
+            } else{
+                list = repository.findHasNotTheses(pageable, search, jurusan);
+            }
+        }
+
+        return Optional.of(list)
                 .map(pages -> PagingDto.builder()
                         .maxPage(pages.getTotalPages() == 0 ? 0 : pages.getTotalPages() - 1)
                         .page(pageable.getPageNumber())
@@ -62,6 +75,7 @@ public class StudentsService {
                         .year(s.getYear())
                         .majors(modelMapper.map(s.getMajors(), MajorsDto.class))
                         .users(modelMapper.map(s.getUsers(), UsersDto.class))
+                        .theses(s.getTheses() != null ? modelMapper.map(s.getTheses(), ThesesDto.class) : null)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -81,6 +95,10 @@ public class StudentsService {
 
     public List<Students> findByMajors(Majors majors) {
         return repository.findByMajors(majors);
+    }
+
+    public Students findByTheses(Theses theses) {
+        return repository.findByTheses(theses);
     }
 
     @Transactional
@@ -116,13 +134,14 @@ public class StudentsService {
     }
 
     @Transactional
-    public boolean delete(Long id) {
+    public boolean delete(Long id) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         Students students = repository.findById(id).get();
-        if (CollectionUtils.isEmpty(thesesService.findByStudents(students))){
+        if (students.getTheses() != null){
+            return false;
+        } else{
+            repository.delete(students);
             usersService.delete(students.getUsers().getUserId());
             return true;
-        }else{
-            return false;
         }
     }
 }

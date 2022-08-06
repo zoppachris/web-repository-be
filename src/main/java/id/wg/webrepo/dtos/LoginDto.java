@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(value={"password"}, allowSetters= true)
 public class LoginDto {
     public long userId;
+    public Long thesesId;
     public String username;
     public String name;
     public String roleName;

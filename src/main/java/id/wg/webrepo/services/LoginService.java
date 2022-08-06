@@ -81,6 +81,7 @@ public class LoginService {
         response.setRoleName(roleUser.getRoles().getRoleName());
         lecturers.ifPresent(value -> response.setFacultyName(value.getFaculties().getFacultyName()));
         if (students.isPresent()){
+            response.setThesesId(students.get().getTheses() != null ? students.get().getTheses().getThesesId() : null);
             response.setMajorName(students.get().getMajors().getMajorName());
             response.setFacultyName(students.get().getMajors().getFaculties().getFacultyName());
         }
