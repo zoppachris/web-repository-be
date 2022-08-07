@@ -98,7 +98,9 @@ public class StudentsService {
     }
 
     public Students findByTheses(Theses theses) {
-        return repository.findByTheses(theses);
+        Students students = repository.findByTheses(theses);
+        students.setTheses(null);
+        return students;
     }
 
     @Transactional

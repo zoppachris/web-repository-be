@@ -2,7 +2,6 @@ package id.wg.webrepo.services;
 
 import id.wg.webrepo.dtos.PagingDto;
 import id.wg.webrepo.dtos.StudentsDto;
-import id.wg.webrepo.dtos.StudentsReadOnlyDto;
 import id.wg.webrepo.dtos.ThesesDto;
 import id.wg.webrepo.models.Students;
 import id.wg.webrepo.models.Theses;
@@ -62,7 +61,7 @@ public class ThesesService {
                         .year(t.getYear())
                         .partialDocumentUrl(t.getPartialDocumentUrl())
                         .fullDocumentUrl(getUrlDocument(t.getFullDocumentUrl()))
-                        .students(modelMapper.map(studentsService.findByTheses(t), StudentsReadOnlyDto.class))
+                        .students(modelMapper.map(studentsService.findByTheses(t), StudentsDto.class))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -78,7 +77,7 @@ public class ThesesService {
             theses = optional.get();
         }
 
-        StudentsReadOnlyDto studentsDto = modelMapper.map(studentsService.findByTheses(theses), StudentsReadOnlyDto.class);
+        StudentsDto studentsDto = modelMapper.map(studentsService.findByTheses(theses), StudentsDto.class);
         ThesesDto dto = new ThesesDto();
         dto.setThesesId(theses.getThesesId());
         dto.setThesesTitle(theses.getThesesTitle());

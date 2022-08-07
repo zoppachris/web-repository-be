@@ -15,7 +15,7 @@ public class ThesesDto extends BaseModelDto{
     public String abstracts;
     public String keywords;
     public String year;
-    public StudentsReadOnlyDto students;
+    public StudentsDto students;
     public String partialDocumentUrl;
     public String fullDocumentUrl;
 }
