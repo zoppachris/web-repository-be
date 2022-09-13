@@ -14,13 +14,16 @@ public class LecturersController {
     private LecturersService service;
 
     @GetMapping()
-    public Response<Object> read(@RequestParam(required = false) Long id, @RequestParam String search, Pageable pageable) {
+    public Response<Object> read(@RequestParam(required = false) Long id,
+                                 @RequestParam String search,
+                                 @RequestParam String fakultas,
+                                 Pageable pageable) {
         Response<Object> response = new Response<>();
         try {
             if (id != null){
                 response.setSuccess(service.findById(id));
             }else{
-                response.setSuccess(service.findAll(pageable, search));
+                response.setSuccess(service.findAll(pageable, search, fakultas));
             }
         } catch (Exception e) {
             e.printStackTrace();

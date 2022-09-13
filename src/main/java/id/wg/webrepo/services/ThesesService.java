@@ -62,6 +62,8 @@ public class ThesesService {
                         .partialDocumentUrl(t.getPartialDocumentUrl())
                         .fullDocumentUrl(getUrlDocument(t.getFullDocumentUrl()))
                         .students(modelMapper.map(studentsService.findByTheses(t), StudentsDto.class))
+                        .fullTotalDownload(t.getFullTotalDownload())
+                        .partialTotalDownload(t.getPartialTotalDownload())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -108,8 +110,10 @@ public class ThesesService {
             repository.save(theses);
         } else{
             theses = modelMapper.map(dto, Theses.class);
+            theses.setFullTotalDownload(0);
+            theses.setPartialTotalDownload(0);
             repository.setSequence();
-            repository.save(theses);
+            theses = repository.save(theses);
 
             Students students = studentsService.findById(dto.getStudents().getStudentId());
             students.setTheses(theses);
@@ -131,15 +135,27 @@ public class ThesesService {
         repository.delete(theses);
     }
 
-    public Theses findByStudents(Students students) {
-        return repository.findByStudents(students);
-    }
-
     public String getUrlDocument(String path){
         if (UserSessionUtil.getUsername() != null){
             return path;
         } else {
             return "";
+        }
+    }
+
+    @Transactional
+    public void countDownloadTheses(Long id, boolean isPartial) {
+        Optional<Theses> optional = repository.findById(id);
+        if (optional.isPresent()){
+            Theses theses = optional.get();
+            if (isPartial) {
+                int totalDownload = theses.getPartialTotalDownload();
+                theses.setPartialTotalDownload(totalDownload+1);
+            } else{
+                int totalDownload = theses.getFullTotalDownload();
+                theses.setFullTotalDownload(totalDownload+1);
+            }
+            repository.save(theses);
         }
     }
 }

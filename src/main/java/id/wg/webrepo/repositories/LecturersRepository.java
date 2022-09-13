@@ -15,9 +15,11 @@ import java.util.Optional;
 @Repository
 public interface LecturersRepository extends JpaRepository<Lecturers, Long> {
     @Query("SELECT l FROM Lecturers l " +
-            "WHERE (LOWER(l.lectureName) LIKE LOWER(CONCAT('%',:search,'%')) " +
-            "OR LOWER(l.nidn) LIKE LOWER(CONCAT('%',:search,'%')))")
-    Page<Lecturers> findAll(Pageable pageable, String search);
+            "LEFT JOIN Faculties f ON l.faculties.facultyId = f.facultyId " +
+            "WHERE ((LOWER(l.lectureName) LIKE LOWER(CONCAT('%',:search,'%')) " +
+            "OR LOWER(l.nidn) LIKE LOWER(CONCAT('%',:search,'%'))) " +
+            "AND LOWER(f.facultyName) LIKE LOWER(CONCAT('%',:fakultas,'%')))")
+    Page<Lecturers> findAll(Pageable pageable, String search, String fakultas);
 
     @Query("SELECT l FROM Lecturers l WHERE l.faculties = :faculties")
     List<Lecturers> findByFaculties(Faculties faculties);

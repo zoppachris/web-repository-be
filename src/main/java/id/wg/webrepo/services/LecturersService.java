@@ -38,8 +38,8 @@ public class LecturersService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Optional<PagingDto> findAll(Pageable pageable, String search) {
-        return Optional.of(repository.findAll(pageable, search))
+    public Optional<PagingDto> findAll(Pageable pageable, String search, String fakultas) {
+        return Optional.of(repository.findAll(pageable, search, fakultas))
                 .map(pages -> PagingDto.builder()
                         .maxPage(pages.getTotalPages() == 0 ? 0 : pages.getTotalPages() - 1)
                         .page(pageable.getPageNumber())

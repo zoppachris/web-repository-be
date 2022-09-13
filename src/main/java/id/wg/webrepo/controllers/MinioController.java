@@ -2,6 +2,7 @@ package id.wg.webrepo.controllers;
 
 import id.wg.webrepo.payload.Response;
 import id.wg.webrepo.services.MinioService;
+import id.wg.webrepo.services.ThesesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ import java.io.IOException;
 public class MinioController {
     @Autowired
     private MinioService service;
+
+    @Autowired
+    private ThesesService thesesService;
 
     @PutMapping("/upload")
     public Response<Object> upload(@RequestParam MultipartFile file,
@@ -32,16 +36,23 @@ public class MinioController {
     }
 
     @GetMapping(path = "/download")
-    public ResponseEntity<ByteArrayResource> download(@RequestParam String filename) {
-        byte[] data = service.getFile(filename);
-        ByteArrayResource resource = new ByteArrayResource(data);
+    public Object download(@RequestParam String filename, @RequestParam long theseId, @RequestParam boolean isPartial) {
+        try {
+            byte[] data = service.getFile(filename);
+            ByteArrayResource resource = new ByteArrayResource(data);
 
-        return ResponseEntity
-                .ok()
-                .contentLength(data.length)
-                .header("Content-type", "application/octet-stream")
-                .header("Content-disposition", "attachment; filename=\"" + filename + "\"")
-                .body(resource);
-
+            thesesService.countDownloadTheses(theseId, isPartial);
+            return ResponseEntity
+                    .ok()
+                    .contentLength(data.length)
+                    .header("Content-type", "application/octet-stream")
+                    .header("Content-disposition", "attachment; filename=\"" + filename + "\"")
+                    .body(resource);
+        }catch (Exception e){
+            e.printStackTrace();
+            Response<Object> response = new Response<>();
+            response.setError("Failed to download file");
+            return response;
+        }
     }
 }

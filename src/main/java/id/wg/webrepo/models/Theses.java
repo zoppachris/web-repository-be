@@ -34,4 +34,10 @@ public class Theses extends BaseModel {
 
     @Column(name = "year")
     public String year;
+
+    @Column(name = "partial_total_download")
+    public Integer partialTotalDownload;
+
+    @Column(name = "full_total_download")
+    public Integer fullTotalDownload;
 }
