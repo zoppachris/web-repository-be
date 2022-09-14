@@ -81,7 +81,7 @@ public class ApplicationConfiguration {
             log.info("System initialization started");
             Roles superAdminRole = initSystemRole(rolesRepository);
             initSystemUser(passwordEncoder, usersRepository, roleUserRepository, superAdminRole);
-            log.info("System initialization finished");
+            log.info("System initialization finished v.1.0");
         };
     }
 
