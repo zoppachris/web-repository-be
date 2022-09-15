@@ -36,12 +36,12 @@ public class MinioController {
     }
 
     @GetMapping(path = "/download")
-    public Object download(@RequestParam String filename, @RequestParam long theseId, @RequestParam boolean isPartial) {
+    public Object download(@RequestParam String filename, @RequestParam long thesesId, @RequestParam boolean isPartial) {
         try {
             byte[] data = service.getFile(filename);
             ByteArrayResource resource = new ByteArrayResource(data);
 
-            thesesService.countDownloadTheses(theseId, isPartial);
+            thesesService.countDownloadTheses(thesesId, isPartial);
             return ResponseEntity
                     .ok()
                     .contentLength(data.length)
