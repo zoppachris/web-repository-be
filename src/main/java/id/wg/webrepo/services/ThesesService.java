@@ -89,6 +89,8 @@ public class ThesesService {
         dto.setStudents(studentsDto);
         dto.setFullDocumentUrl(getUrlDocument(theses.getFullDocumentUrl()));
         dto.setPartialDocumentUrl(theses.getPartialDocumentUrl());
+        dto.setFullTotalDownload(theses.getFullTotalDownload());
+        dto.setPartialTotalDownload(theses.getPartialTotalDownload());
         return dto;
     }
 
